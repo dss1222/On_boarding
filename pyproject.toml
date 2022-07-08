@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "practice2"
+version = "0.1.0"
+description = ""
+authors = ["신동석 <96603945+dss1222@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+mongoengine = "^0.24.1"
+marshmallow = "^3.17.0"
+bcrypt = "^3.2.2"
+flask-mongoengine = "^1.0.0"
+Flask-Classful = "^0.14.2"
+flask-marshmallow = "^0.14.0"
+PyJWT = "^2.4.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
