@@ -4,6 +4,9 @@ from app.post.postModel import Post
 from app.user.userSchema import UserSchemaName
 from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentListSchema
+from app.board.boardModel import Board
+from app.user.userModel import User
+from app.board.boardSchema import BoardSchema
 
 
 class PostCreateSchema(Schema):
@@ -41,18 +44,13 @@ class PostDetailSchema(Schema):
 
 
 class PostListSchema(Schema):
+    board = fields.Nested(BoardSchema)
     id = fields.Str()
     user = fields.Nested(UserSchemaName, dump_only=("id", "username"))
     title = fields.Str()
-    total_likes_count = fields.Method('count_likes')
-    total_comments_count = fields.Method('count_comments')
+    likes_cnt = fields.Int()
+    comments_cnt = fields.Int()
     created_at = fields.DateTime()
-
-    def count_likes(self, obj):
-        return len(obj.likes)
-
-    def count_comments(self, obj):
-        return len(obj.comments)
 
 
 class PostUpdateSchema(Schema):

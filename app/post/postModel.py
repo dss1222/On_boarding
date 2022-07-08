@@ -2,7 +2,7 @@ import datetime
 from marshmallow import fields
 
 from flask_mongoengine import Document
-from mongoengine import StringField, DateTimeField, ReferenceField, ListField
+from mongoengine import *
 from app.user.userModel import User
 from app.board.boardModel import Board
 
@@ -15,6 +15,8 @@ class Post(Document):
     created_at = DateTimeField(default=datetime.datetime.now())
     likes = ListField(StringField())
     comments = ListField(StringField())
+    likes_cnt = IntField(default=0)
+    comments_cnt = IntField(default=0)
     tag = StringField()
 
     def is_user(self, user_id):

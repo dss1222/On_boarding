@@ -39,7 +39,7 @@ class UserView(FlaskView):
 
         token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
                            current_app.config['SECRET'], current_app.config['ALGORITHM'])
-        print(jwt.decode())
+        # print(jwt.decode())
         return jsonify(token), 200
 
     #회원정보수정
