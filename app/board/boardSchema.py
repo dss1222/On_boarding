@@ -7,6 +7,11 @@ class BoardCreateSchema(Schema):
     name = fields.Str(required=True)
 
     @post_load()
-    def create_board(self,data,**kwargs):
+    def create_board(self, data, **kwargs):
         board = Board(**data)
         return board
+
+
+class BoardSchema(Schema):
+    id = fields.Str()
+    name = fields.Str()

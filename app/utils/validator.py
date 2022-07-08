@@ -10,6 +10,7 @@ from app.utils.ErrorHandler import *
 from app.user.userSchema import UserSchema, UserCreateSchema
 from app.post.postModel import Post
 from app.board.boardSchema import BoardCreateSchema
+from app.board.boardModel import Board
 
 
 # 로그인 인증 데코레이터
@@ -115,11 +116,11 @@ def board_validator(f):
     def decorated_view(*args, **kwargs):
         board_id = kwargs['board_id']
 
-        if bytes(board_id) != 12:
+        if len(board_id) != 24:
             return WrongId()
 
-        if not Post.objects(id=board_id):
+        if not Board.objects(id=board_id):
             return NotFoundComment()
-        return f(*args, **kwargs)
 
+        return f(*args, **kwargs)
     return decorated_view

@@ -10,10 +10,10 @@ from app.utils.ErrorHandler import *
 
 class CommentView(FlaskView):
     # 코멘트 작성
-    @route('/<post_id>', methods=['POST'])
+    @route('/', methods=['POST'])
     @login_required
     @post_validator
-    def create_comment(self, post_id):
+    def create_comment(self, post_id, board_id):
         comment = CommentCreateSchema().load(json.loads(request.data))
         post = Post.objects(id=post_id).get()
         comment.user = g.user_id
@@ -22,6 +22,7 @@ class CommentView(FlaskView):
         comment.save()
 
         post.update(push__comments=str(comment))
+        post.update(inc__comments_cnt=1)
 
         return Success()
 
@@ -49,7 +50,7 @@ class CommentView(FlaskView):
         comment.like(g.user_id)
         return Success()
 
-    @route('/<post_id>/order/created', methods=['GET'])
+    @route('/order/created', methods=['GET'])
     @login_required
     @post_validator
     def get_comments_created(self, post_id):
