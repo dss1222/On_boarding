@@ -1,5 +1,6 @@
 from flask_classful import FlaskView, route
 from flask import request, g
+from bson import ObjectId
 
 from app.post.postSchema import PostCreateSchema, PostDetailSchema, PostListSchema, PostUpdateSchema
 from app.post.postModel import Post
@@ -11,9 +12,10 @@ class PostView(FlaskView):
     # 게시글 작성
     @route('', methods=['POST'])
     @login_required
-    def create_post(self):
+    @board_validator
+    def create_post(self, board_id):
         post = PostCreateSchema().load(json.loads(request.data))
-
+        post.board = ObjectId(board_id)
         post.user = g.user_id
         post.save()
 
