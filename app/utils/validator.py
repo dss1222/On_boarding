@@ -9,6 +9,7 @@ from marshmallow import ValidationError
 from app.utils.ErrorHandler import *
 from app.user.userSchema import UserSchema, UserCreateSchema
 from app.post.postModel import Post
+from app.board.boardSchema import BoardCreateSchema
 
 
 # 로그인 인증 데코레이터
@@ -91,6 +92,34 @@ def comment_validator(f):
         if not Post.objects(id=comment_id):
             return NotFoundComment()
 
+        return f(*args, **kwargs)
+
+    return decorated_view
+
+
+def board_crate_validator(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        try:
+            BoardCreateSchema().load(json.loads(request.data))
+        except ValidationError as err:
+            CreatedError()
+
+        return f(*args, **kwargs)
+
+    return decorated_view
+
+
+def board_validator(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        board_id = kwargs['board_id']
+
+        if bytes(board_id) != 12:
+            return WrongId()
+
+        if not Post.objects(id=board_id):
+            return NotFoundComment()
         return f(*args, **kwargs)
 
     return decorated_view

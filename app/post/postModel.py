@@ -4,10 +4,12 @@ from marshmallow import fields
 from flask_mongoengine import Document
 from mongoengine import StringField, DateTimeField, ReferenceField, ListField
 from app.user.userModel import User
+from app.board.boardModel import Board
 
 
 class Post(Document):
     user = ReferenceField(User, required=True)
+    board = ReferenceField(Board)
     title = StringField(required=True)
     content = StringField(required=True)
     created_at = DateTimeField(default=datetime.datetime.now())

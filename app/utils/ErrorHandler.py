@@ -26,5 +26,13 @@ def NotFoundComment():
     return jsonify("해당 댓글이 존재하지 않습니다"), 404
 
 
+def NotFoundBoard():
+    return jsonify("해당 게시판이 존재하지 않습니다"), 404
+
+
 def WrongId():
     return jsonify("잘못된 id 형식입니다"), 404
+
+
+def CreatedError():
+    return jsonify("잘못된 요청입니다"), 422
