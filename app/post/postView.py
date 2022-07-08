@@ -27,7 +27,7 @@ class PostView(FlaskView):
     @post_validator
     @board_validator
     def get_posts_detail(self, post_id, board_id):
-        post = Post.objects(board=board_id,id=post_id).get()
+        post = Post.objects(board=board_id, id=post_id).get()
         print(g.user_id)
         print(g.username)
         return PostDetailSchema().dump(post), 200
@@ -46,7 +46,7 @@ class PostView(FlaskView):
     @login_required
     @board_validator
     def get_posts_likes(self, board_id):
-        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').order_by('-likes').limit(10)
+        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').order_by('-likes_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
@@ -56,7 +56,7 @@ class PostView(FlaskView):
     def get_posts_comeents(self, board_id):
         post_limit_10 = Post.objects(board=board_id).order_by('-comments_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
-        return {'posts' : post_list}, 200
+        return {'posts': post_list}, 200
 
     # 게시글 수정 <회원정보 일치해야 함>
     @route('/<post_id>', methods=['PATCH'])
@@ -86,11 +86,11 @@ class PostView(FlaskView):
         post.delete()
         return Success()
 
-    #좋아요 기능
-    @route('/likes/<post_id>', methods=['POST'])
+    # 좋아요 기능
+    @route('/<post_id>/likes', methods=['POST'])
     @login_required
     @post_validator
-    def like_post(self, post_id):
-        post = Post.objects(id=post_id).get()
+    def like_post(self, board_id, post_id):
+        post = Post.objects(board=board_id, id=post_id).get()
         post.like(g.user_id)
         return Success()

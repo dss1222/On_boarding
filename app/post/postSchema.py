@@ -26,16 +26,10 @@ class PostDetailSchema(Schema):
     title = fields.Str()
     content = fields.Str()
     created_at = fields.DateTime(dump_only=True)
-    total_likes_cnt = fields.Method('count_likes')
-    total_comment_cnt = fields.Method('count_comment')
+    likes_cnt = fields.Int()
+    comments_cnt = fields.Int()
     tag = fields.Str()
     comments = fields.Method('get_comments')
-
-    def count_likes(self, obj):
-        return len(obj.likes)
-
-    def count_comment(self, obj):
-        return len(obj.comments)
 
     def get_comments(self, obj):
         comment_list = CommentListSchema(many=True).dump(Comment.objects(post=obj.id).order_by('created_at'))

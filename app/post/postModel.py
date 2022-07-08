@@ -25,6 +25,7 @@ class Post(Document):
     def like(self, user):
         if str(user) not in self.likes:
             self.update(push__likes=str(user))  # push__likes에 user를 추가함. likes는 push된 유저의 갯수, push 해당 값 추가
+            self.update(inc__likes_cnt=1)
         else:
             self.update(pull__likes=str(user))
-
+            self.update(dec__likes_cnt=1)
