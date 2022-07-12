@@ -4,8 +4,6 @@ from app.post.postModel import Post
 from app.user.userSchema import UserSchemaName
 from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentListSchema
-from app.board.boardModel import Board
-from app.user.userModel import User
 from app.board.boardSchema import BoardSchema
 
 

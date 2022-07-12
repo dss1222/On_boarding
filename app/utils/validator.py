@@ -2,7 +2,7 @@ import json
 import jwt
 
 from functools import wraps
-from flask import request, g, jsonify, current_app
+from flask import request, g, current_app
 from bson.json_util import loads
 from marshmallow import ValidationError
 
@@ -124,4 +124,5 @@ def board_validator(f):
             return NotFoundComment()
 
         return f(*args, **kwargs)
+
     return decorated_view

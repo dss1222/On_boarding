@@ -15,9 +15,9 @@ def create_app():
     except Exception as e:
         print('Warning! 데이터베이스 에러 - ' + str(e))
 
-    # from flask_cors import CORS
-    # CORS(app, resources={r'*': {'origins': '*'}})
-    #
+    from flask_cors import CORS
+    CORS(app, resources={r'*': {'origins': '*'}})
+
     from app.utils.viewhandler import register_api
     register_api(app)
 

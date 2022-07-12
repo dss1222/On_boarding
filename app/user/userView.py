@@ -1,8 +1,7 @@
-import json
 import jwt
 
 from flask_classful import FlaskView, route
-from flask import jsonify, request, g, current_app
+from flask import request, g, current_app
 from bson.json_util import dumps
 
 from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
@@ -61,7 +60,7 @@ class UserView(FlaskView):
         else:
             return {'message': '이미 등롤된 ID입니다'}, 409
 
-    #내가 쓴글 조회
+    # 내가 쓴글 조회
     @route('/mypage/posts', methods=['GET'])
     @login_required
     def get_myposts(self):
@@ -70,18 +69,18 @@ class UserView(FlaskView):
         print(g.user_id)
         return {'post': post_list}, 200
 
-    #내가 작성한 코멘트 조회
-    @route('/mypage/comments',methods=['GET'])
+    # 내가 작성한 코멘트 조회
+    @route('/mypage/comments', methods=['GET'])
     @login_required
     def get_mycomments(self):
         comment = Comment.objects(user=g.user_id)
         comment_list = CommentListSchema(many=True).dump(comment)
-        return {'comment' : comment_list}, 200
+        return {'comment': comment_list}, 200
 
-    #내가 좋아요한 글 조회
+    # 내가 좋아요한 글 조회
     @route('/mypage/posts/likes')
     @login_required
     def get_myposts_likes(self):
         post = Post.objects(likes__exact=str(g.user_id))
         post_list = PostListSchema(many=True).dump(post)
-        return {'post' : post_list}, 200
+        return {'post': post_list}, 200
