@@ -8,14 +8,10 @@ class Config:
     MONGO_URI = 'mongodb://localhost:27017/practice'
 
 
-class LocalConfig(Config):
-    MONGO_URI = 'mongodb://localhost:27017/practice'
-    TESTING = True
-    DEBUG = True
-
-
 class TestConfig(Config):
-    MONGO_URI = 'mongomock://127.0.0.1:27017/practice?connect=false'
+    SECRET = '1q2w3e4r1q2w3e4r'
+    ALGORITHM = 'HS256'
+    MONGO_URI = 'mongomock://localhost'
     TESTING = True
 
 
