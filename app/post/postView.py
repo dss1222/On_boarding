@@ -62,7 +62,7 @@ class PostView(FlaskView):
     @route('/<post_id>', methods=['PATCH'])
     @login_required
     @post_validator
-    def update_post(self, post_id):
+    def update_post(self, post_id, board_id):
         data = PostUpdateSchema().load(json.loads(request.data))
         post = Post.objects(id=post_id).get()
 
@@ -77,7 +77,7 @@ class PostView(FlaskView):
     @route('/<post_id>', methods=['DELETE'])
     @login_required
     @post_validator
-    def delete_post(self, post_id):
+    def delete_post(self, post_id, board_id):
         post = Post.objects(id=post_id).get()
 
         if not post.is_user(g.user_id):
