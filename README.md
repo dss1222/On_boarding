@@ -98,5 +98,8 @@
 |게시글 관련|게시글 수정|/boards/<board_id>/posts/<post_id>, PATCH|{<br />"title" : "게시글 이름",<br />"content" : "게시글 내용",<br />"tag" : "태그 내용"<br />}|
 |게시글 관련|게시글 삭제|/boards/<board_id>/posts/<post_id>, DELETE|| 
 |||||
+|댓글 관련|댓글 작성|/boards/<board_id>/posts/<post_id>/comments, POST|{<br />"content" : "댓글 내용"<br />}|
+|댓글 관련|댓글 좋아요|/comments/<comments_id>/likes, POST|{}|
+|댓글 관련|대댓글 작성|/comments/<comments_id>/recomments, POST|{<br />"content" : "댓글 내용"<br />}|
 </div>
 </details>
