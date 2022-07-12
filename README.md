@@ -49,7 +49,11 @@
 
 
 
+<br />
+<br />
+<br />
 
+---
 
 ### 특이사항
 - 테스트 코드 미구현 (구현 예정)
@@ -61,3 +65,22 @@
   - flask-classful : view를 구현할 때 전체 view를 하나의 class view로 묶어 관리하기 편하게 만들어줌
   - marshmallow : 데이터의 정보를 보기 쉽게 가공하여 사용(spring 의 dto와 비슷)
   - mongoengine : orm처럼 db접근을 쉽게 함 또한 mongodb는 nosql인데 mongoengine을 이용하여 rdbms처럼 비슷하게 사용할 수 있음
+  
+ 
+ <br />
+ <br />
+<details>
+<summary>API</summary>
+작성중 ...
+<div>
+
+|분류|uri|비고|
+| :-: |:-: |:- |
+|회원가입|/users/signup, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
+|로그인|/users/login, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
+|내가 쓴 글 조회|/users/mypage/posts, GET||
+|내가 쓴 댓글 조회|/users/mypage/comments, GET||
+|내가 좋아요한 글 조회|/users/mypage/posts/likes, GET||
+        
+</div>
+</details>
