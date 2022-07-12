@@ -1,9 +1,6 @@
 from flask_classful import FlaskView, route
-from flask import request, g
 
 from app.comment.commentSchema import CommentCreateSchema, CommentListSchema
-from app.comment.commentModel import Comment
-from app.post.postModel import Post
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
 
@@ -26,7 +23,7 @@ class CommentView(FlaskView):
 
         return Success()
 
-    #대댓글
+    # 대댓글
     @route('/<comment_id>/recomment', methods=['POST'])
     @login_required
     @comment_validator

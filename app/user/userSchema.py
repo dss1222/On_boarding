@@ -2,7 +2,6 @@ import bcrypt
 
 from marshmallow import fields, Schema, post_load
 from app.user.userModel import User
-from flask import jsonify, request
 
 
 class UserCreateSchema(Schema):

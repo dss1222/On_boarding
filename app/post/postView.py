@@ -1,9 +1,7 @@
 from flask_classful import FlaskView, route
-from flask import request, g
 from bson import ObjectId
 
 from app.post.postSchema import PostCreateSchema, PostDetailSchema, PostListSchema, PostUpdateSchema
-from app.post.postModel import Post
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
 
