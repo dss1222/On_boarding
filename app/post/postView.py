@@ -94,3 +94,11 @@ class PostView(FlaskView):
         post = Post.objects(board=board_id, id=post_id).get()
         post.like(g.user_id)
         return Success()
+
+    # 태그 검색 기능
+    @route('/search/<search>', methods=['GET'])
+    @login_required
+    def search_post(self, board_id, search):
+        post = Post.objects(tag__contains=str(search))
+        post_list = PostListSchema(many=True).dump(post)
+        return {'post': post_list}, 200
