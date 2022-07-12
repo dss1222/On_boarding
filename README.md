@@ -77,7 +77,7 @@
 작성중 ...
 <div>
 
-|종류|분류|uri|비고|
+|종류|분류|url|비고|
 |:-: |:-: |:-: |:- |
 |회원 관련|회원가입|/users/signup, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
 |회원 관련|로그인|/users/login, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
