@@ -11,6 +11,7 @@ from app.user.userSchema import UserSchema, UserCreateSchema
 from app.post.postModel import Post
 from app.board.boardSchema import BoardCreateSchema
 from app.board.boardModel import Board
+from app.comment.commentModel import Comment
 
 
 # 로그인 인증 데코레이터
@@ -87,10 +88,10 @@ def comment_validator(f):
     def decorated_view(*args, **kwargs):
         comment_id = kwargs['comment_id']
 
-        if bytes(comment_id) != 12:
+        if len(comment_id) != 24:
             return WrongId()
 
-        if not Post.objects(id=comment_id):
+        if not Comment.objects(id=comment_id):
             return NotFoundComment()
 
         return f(*args, **kwargs)
