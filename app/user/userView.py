@@ -1,3 +1,4 @@
+import json
 import jwt
 
 from flask_classful import FlaskView, route
