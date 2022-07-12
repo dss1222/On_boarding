@@ -77,13 +77,26 @@
 작성중 ...
 <div>
 
-|분류|uri|비고|
-| :-: |:-: |:- |
-|회원가입|/users/signup, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
-|로그인|/users/login, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
-|내가 쓴 글 조회|/users/mypage/posts, GET||
-|내가 쓴 댓글 조회|/users/mypage/comments, GET||
-|내가 좋아요한 글 조회|/users/mypage/posts/likes, GET||
-        
+|종류|분류|uri|비고|
+|:-: |:-: |:-: |:- |
+|회원 관련|회원가입|/users/signup, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
+|회원 관련|로그인|/users/login, POST|{<br />"username" : "아이디",<br />"password" : "비밀번호" <br />}|
+|회원 관련|내가 쓴 글 조회|/users/mypage/posts, GET||
+|회원 관련|내가 쓴 댓글 조회|/users/mypage/comments, GET||
+|회원 관련|내가 좋아요한 글 조회|/users/mypage/posts/likes, GET||
+|회원 관련|정보 수정|/users/update, PATCH|{<br />"username" : "아이디",<br />}|
+|||||
+|게시판 관련|게시판 작성|/boards, POST|{<br />"name" : "보드 이름",<br />}|
+|||||
+|게시글 관련|게시글 작성|/boards/<board_id>/posts, POST|{<br />"title" : "게시글 이름",<br />"content" : "게시글 내용",<br />"tag" : "태그 내용"<br />}|
+|게시글 관련|게시글 자세히 보기|/boards/<board_id>/posts/<post_id>, GET||   
+|게시글 관련|게시글 최신순 10개 보기|/boards/<board_id>/posts/order/created, GET||   
+|게시글 관련|게시글 댓글 많은 순 10개 보기|/boards/<board_id>/posts/order/comments, GET||  
+|게시글 관련|게시글 좋아요 많은 순 10개 보기|/boards/<board_id>/posts/order/likes, GET||  
+|게시글 관련|게시글 좋아요|/boards/<board_id>/posts/<post_id>/likes, POST|| 
+|게시글 관련|게시글 태그 검색|/boards/<board_id>/posts/search/검색어, GET||  
+|게시글 관련|게시글 수정|/boards/<board_id>/posts/<post_id>, PATCH|{<br />"title" : "게시글 이름",<br />"content" : "게시글 내용",<br />"tag" : "태그 내용"<br />}|
+|게시글 관련|게시글 |/boards/<board_id>/posts/<post_id>, DELETE|| 
+|||||
 </div>
 </details>
