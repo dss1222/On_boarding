@@ -1,6 +1,6 @@
 from app.user.userView import UserView
 from app.post.postView import PostView
-from app.comment.comentView import CommentView
+from app.comment.commentView import CommentView
 from app.board.boardView import BoardView
 
 
