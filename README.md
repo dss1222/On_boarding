@@ -96,7 +96,7 @@
 |게시글 관련|게시글 좋아요|/boards/<board_id>/posts/<post_id>/likes, POST|| 
 |게시글 관련|게시글 태그 검색|/boards/<board_id>/posts/search/검색어, GET||  
 |게시글 관련|게시글 수정|/boards/<board_id>/posts/<post_id>, PATCH|{<br />"title" : "게시글 이름",<br />"content" : "게시글 내용",<br />"tag" : "태그 내용"<br />}|
-|게시글 관련|게시글 |/boards/<board_id>/posts/<post_id>, DELETE|| 
+|게시글 관련|게시글 삭제|/boards/<board_id>/posts/<post_id>, DELETE|| 
 |||||
 </div>
 </details>
