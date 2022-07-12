@@ -26,7 +26,8 @@ class CommentView(FlaskView):
 
         return Success()
 
-    @route('/recomment/<comment_id>', methods=['POST'])
+    #대댓글
+    @route('/<comment_id>/recomment', methods=['POST'])
     @login_required
     @comment_validator
     def create_recomment(self, comment_id):
@@ -42,7 +43,7 @@ class CommentView(FlaskView):
         return Success()
 
     # 좋아요 기능
-    @route('/likes/<comment_id>', methods=['POST'])
+    @route('/<comment_id>/likes', methods=['POST'])
     @login_required
     @comment_validator
     def like_comment(self, comment_id):
