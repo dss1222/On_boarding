@@ -58,22 +58,57 @@ class Test_user:
 
     class Test_login():
         @pytest.fixture()
-        def signup_user(self):
-            return UserFactory.create(username="username", password=bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'))
-
-        @pytest.fixture()
-        def form(self):
+        def form(self, logged_in_user):
             return {
-                "username": "username",
-                "password": "password",
+                "username": logged_in_user.username,
+                "password": "test1234",
             }
 
         @pytest.fixture(scope="function")
-        def subject(self, client, signup_user, form):
+        def subject(self, client, logged_in_user, form):
             return client.post("/users/login", data=json.dumps(form))
 
         class Test_정상요청:
             def test_return_200(self, subject):
                 assert subject.status_code == 200
 
+        class Test_아이디틀림:
+            @pytest.fixture()
+            def form(self):
+                return {
+                    "username": "aaron",
+                    "password": "test1234",
+                }
+
+            def Test_return_400(self, subject):
+                assert subject.status_code == 401
+                assert subject.join["message"] == "존재하지 않는 사용자입니다."
+
+        class Test_비밀번호틀림:
+            @pytest.fixture()
+            def form(self, logged_in_user):
+                return {
+                    "username": logged_in_user.username,
+                    "password": "test12345678",
+                }
+
+            def Test_return_400(self, subject):
+                assert subject.status_code == 401
+                assert subject.join["message"] == "잘못된 비밀번호 입니다"
+
+    # class Test_update:
+    #     @pytest.fixture()
+    #     def form(self, logged_in_user):
+    #         return {
+    #             "id": str(logged_in_user.id),
+    #             "username": "update"
+    #         }
+    #
+    #     @pytest.fixture(scope="function")
+    #     def subject(self, client, form, headers):
+    #         return client.patch("/users/update", headers=headers, data=json.dumps(form))
+    #
+    #     class Test_정상요청:
+    #         def test_return_200(self, subject):
+    #             assert subject.status_code == 200
 
