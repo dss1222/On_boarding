@@ -39,3 +39,41 @@ class Test_user:
                 total_user_cnt = User.objects.count()
                 print(total_user_cnt)
                 assert total_user_cnt == 1
+
+            def test_username_OK(self, subject, form):
+                username = User.objects()[0].username
+                assert username == form["username"]
+
+        class Test_중복계정:
+            @pytest.fixture
+            def form(self, logged_in_user):
+                return {
+                    "username": logged_in_user.username,
+                    "password": "test1234"
+                }
+
+            def test_return_400(self, subject):
+                # print(subject)
+                assert subject.status_code == 409
+
+    class Test_login():
+        @pytest.fixture()
+        def signup_user(self):
+            return UserFactory.create(username="username", password=bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'))
+
+        @pytest.fixture()
+        def form(self):
+            return {
+                "username": "username",
+                "password": "password",
+            }
+
+        @pytest.fixture(scope="function")
+        def subject(self, client, signup_user, form):
+            return client.post("/users/login", data=json.dumps(form))
+
+        class Test_정상요청:
+            def test_return_200(self, subject):
+                assert subject.status_code == 200
+
+

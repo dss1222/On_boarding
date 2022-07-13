@@ -46,6 +46,8 @@ class PostView(FlaskView):
     def get_posts_likes(self, board_id):
         post_limit_10 = Post.objects(board=board_id).order_by('-created_at').order_by('-likes_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
+        # posts = Post.objects.aggregate({'$sort': {{"$size": "$likes"}: -1}})
+        # post_list = PostListSchema(many=True).dump(posts)
         return {'posts': post_list}, 200
 
     # 게시글 조회 댓글 많은 순 10개

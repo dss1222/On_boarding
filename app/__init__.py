@@ -20,4 +20,15 @@ def create_app(test_config=None):
 
     register_api(app)
 
+    # app.config.update({
+    #     'APISPEC_SPEC': APISpec(
+    #         title="Title",
+    #         version="1.0.0",
+    #         openapi_version="3.0.2",
+    #         plugins=[MarshmallowPlugin()],
+    #     ),
+    #     'APISPEC_SWAGGER_URL': '/swagger-json',
+    #     'APISPEC_SWAGGER_UI_URL' : '/swagger/'
+    # })
+
     return app

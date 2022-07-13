@@ -4,6 +4,8 @@ import jwt
 from flask_classful import FlaskView, route
 from flask import request, g, current_app
 from bson.json_util import dumps
+from webargs import fields
+from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.user.userModel import User
@@ -17,8 +19,14 @@ from app.comment.commentModel import Comment
 
 
 class UserView(FlaskView):
+    # decorators = (
+    #     doc(tags=['User']),
+    # )
+
     # 회원가입
     @route('/signup', methods=['POST'])
+    # @doc(description='User 회원가입', summary='User 회원가입')
+    # @use_kwargs(UserCreateSchema(), locations=('json',))
     @user_create_validator
     def signup(self):
 
