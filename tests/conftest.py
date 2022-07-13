@@ -14,7 +14,7 @@ def app():
 def db(app):
     import mongoengine
     mongoengine.connect(host=current_app.config['MONGO_URI'])
-    yield db
+    yield
     mongoengine.disconnect()
 
 

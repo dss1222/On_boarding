@@ -9,5 +9,5 @@ class UserFactory(MongoEngineFactory):
     class Meta:
         model = User
 
-    username = factory.Faker("username")
-    password = factory.Faker("password")
+    username = "test5678"
+    password = "test1234"
