@@ -1,4 +1,5 @@
 import factory
+import bcrypt
 from factory.mongoengine import MongoEngineFactory
 
 from app.user.userModel import User
@@ -10,4 +11,4 @@ class UserFactory(MongoEngineFactory):
         model = User
 
     username = "test5678"
-    password = "test1234"
+    password = bcrypt.hashpw('test1234'.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
