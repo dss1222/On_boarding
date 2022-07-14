@@ -8,4 +8,4 @@ class BoardFactory(MongoEngineFactory):
     class Meta:
         model = Board
 
-    name = fuzzy.FuzzyText(prefix='board_')
+    name = "test_name"

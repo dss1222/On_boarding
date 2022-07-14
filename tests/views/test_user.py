@@ -1,17 +1,9 @@
 import bcrypt
 import pytest
-import uuid
-import factory
-import jwt
 import json
 
-from flask import url_for, current_app
-from json import dumps
-
-from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from app.user.userModel import User
-from app.post.postModel import Post
 
 
 class Test_user:
@@ -96,19 +88,27 @@ class Test_user:
                 assert subject.status_code == 401
                 assert subject.join["message"] == "잘못된 비밀번호 입니다"
 
-    # class Test_update:
-    #     @pytest.fixture()
-    #     def form(self, logged_in_user):
-    #         return {
-    #             "id": str(logged_in_user.id),
-    #             "username": "update"
-    #         }
-    #
-    #     @pytest.fixture(scope="function")
-    #     def subject(self, client, form, headers):
-    #         return client.patch("/users/update", headers=headers, data=json.dumps(form))
-    #
-    #     class Test_정상요청:
-    #         def test_return_200(self, subject):
-    #             assert subject.status_code == 200
+    class Test_update:
+        @pytest.fixture()
+        def form(self):
+            return {
+                "username": "update"
+            }
 
+        @pytest.fixture(scope="function")
+        def subject(self, client, form, headers):
+            return client.patch("/users/update", headers=headers, data=json.dumps(form))
+
+        class Test_정상요청:
+            def test_return_200(self, subject):
+                assert subject.status_code == 200
+
+        class Test_중복된닉네임일경우:
+            @pytest.fixture()
+            def form(self, logged_in_user):
+                return {
+                    "username": logged_in_user.username
+                }
+
+            def test_return_200(self, subject):
+                assert subject.status_code == 409

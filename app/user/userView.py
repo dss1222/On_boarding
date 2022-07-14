@@ -67,7 +67,7 @@ class UserView(FlaskView):
             user.update(**data)
             return Success()
         else:
-            return {'message': '이미 등롤된 ID입니다'}, 409
+            return {'message': '이미 등록된 ID입니다'}, 409
 
     # 내가 쓴글 조회
     @route('/mypage/posts', methods=['GET'])
