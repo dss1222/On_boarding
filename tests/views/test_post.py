@@ -64,6 +64,27 @@ class Test_Post:
             def test_return_401(self, subject):
                 assert subject.status_code == 401
 
+    class Test_post_get:
+        @pytest.fixture(scope="function")
+        def subject(self, url_get,headers,client):
+            return client.get(url_get, headers=headers)
+
+        def test_details_post(self, subject):
+            post = Post.objects.first()
+            assert post.title == 'test_title'
+
+    class Test_search_tag:
+        @pytest.fixture(scope="function")
+        def subject(self, headers, client, board, post):
+            url = "/boards/" + str(board.id) + "/posts/search/test"
+            return client.get(url, headers=headers)
+
+        def test_search_tag(self, subject):
+            body = subject.json
+            posts = body['posts']
+            assert posts[0]['title'] == "test_title"
+
+
     class Test_post_update:
         @pytest.fixture()
         def form(self):
