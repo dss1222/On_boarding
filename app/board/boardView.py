@@ -12,4 +12,5 @@ class BoardView(FlaskView):
         board = BoardCreateSchema().load(json.loads(request.data))
 
         board.save()
+
         return Success()
