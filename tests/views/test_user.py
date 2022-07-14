@@ -72,9 +72,8 @@ class Test_user:
                     "password": "test1234",
                 }
 
-            def Test_return_400(self, subject):
+            def test_return_400(self, subject):
                 assert subject.status_code == 401
-                assert subject.join["message"] == "존재하지 않는 사용자입니다."
 
         class Test_비밀번호틀림:
             @pytest.fixture()
@@ -84,9 +83,8 @@ class Test_user:
                     "password": "test12345678",
                 }
 
-            def Test_return_400(self, subject):
+            def test_return_400(self, subject):
                 assert subject.status_code == 401
-                assert subject.join["message"] == "잘못된 비밀번호 입니다"
 
     class Test_update:
         @pytest.fixture()

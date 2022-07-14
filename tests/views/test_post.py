@@ -1,16 +1,11 @@
-import factory
-import pytest
-
-import factory
 import pytest
 import json
-
-from flask import url_for
-from json import dumps
 
 from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
+
+from app.post.postModel import Post
 
 
 class Test_Post:
@@ -26,7 +21,11 @@ class Test_Post:
     def post(self, board, logged_in_user):
         return PostFactory.create(board=board.id, user=logged_in_user.id)
 
-    class Test_post:
+    @pytest.fixture()
+    def url_get(self, board, post):
+        return "/boards/" + str(board.id) + "/posts/" + str(post.id)
+
+    class Test_post_create:
         @pytest.fixture()
         def form(self):
             return {
@@ -43,3 +42,127 @@ class Test_Post:
         class Test_정상요청:
             def test_return_200(self, subject):
                 assert subject.status_code == 200
+
+            def test_return_count_one(self, subject):
+                assert Post.objects.count() == 1
+
+        class Test_보드id_error:
+            @pytest.fixture(scope="function")
+            def subject(self, client, headers, form):
+                url = "/boards/" + "asdaasd" + "/posts"
+                return client.post(url, headers=headers, data=json.dumps(form))
+
+            def test_return_404(self, subject):
+                assert subject.status_code == 404
+
+        class Test_토큰이이상할경우:
+            @pytest.fixture(scope="function")
+            def subject(self, client, form, board):
+                url = "/boards/" + str(board.id) + "/posts"
+                return client.post(url, headers={"Authorization": "asd"}, data=json.dumps(form))
+
+            def test_return_401(self, subject):
+                assert subject.status_code == 401
+
+    class Test_post_update:
+        @pytest.fixture()
+        def form(self):
+            return {
+                "title": "test_title_update",
+                "content": "test_content_update",
+                "tag": "test_tags_update"
+            }
+
+        @pytest.fixture(scope="function")
+        def subject(self, client, headers, form, board, post, url_get):
+            return client.patch(url_get, headers=headers, data=json.dumps(form))
+
+        class Test_정상요청:
+            def test_return_200(self, subject):
+                assert subject.status_code == 200
+
+            def test_return_update_get(self, subject, form, logged_in_user):
+                post = Post.objects.first()
+                assert post.title == 'test_title_update'
+                assert post.content == form['content']
+                assert post.tag == form['tag']
+                assert post.user == logged_in_user
+
+    class Test_post_delete:
+        @pytest.fixture(scope="function")
+        def subject(self, client, headers, board, post, url_get):
+            return client.delete(url_get, headers=headers)
+
+        class Test_삭제_정상요청:
+            def test_return_200(self, subject):
+                assert subject.status_code == 200
+
+            def test_return_count_zero(self, subject):
+                post_cnt = Post.objects.count()
+                assert post_cnt == 0
+
+        class Test_삭제_실패:
+            @pytest.fixture(scope="function")
+            def subject(self, client, headers, board, post, url_get):
+                return client.delete(url_get, headers={"Authorization": "asd"})
+
+            def test_return_401(self, subject):
+                assert subject.status_code == 401
+
+            def test_return_count_1(self, subject):
+                assert Post.objects.count() == 1
+
+    class Test_post_likes:
+        @pytest.fixture(scope="function")
+        def subject(self, client, headers, url_get):
+            url = url_get + "/likes"
+            return client.post(url, headers=headers)
+
+        class Test_정상요청:
+            def test_return_200(self, subject):
+                assert subject.status_code == 200
+
+            def test_return_likecnt_one(self, subject):
+                post = Post.objects.first()
+                assert post.likes_cnt == 1
+
+            class Test_두번좋아요:
+                @pytest.fixture(scope="function")
+                def subject2(self, client, headers, url_get):
+                    url = url_get + "/likes"
+                    return client.post(url, headers=headers)
+
+                def test_return_200(self, subject2):
+                    assert subject2.status_code == 200
+
+                def test_return_count_0(self, subject, subject2):
+                    post = Post.objects.first()
+                    assert post.likes_cnt == 0
+
+                class Test_다른계정_두번좋아요:
+                    @pytest.fixture(scope="function")
+                    def subject2(self, client, headers, url_get):
+                        url = url_get + "/likes"
+                        return client.post(url, headers={"Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"})
+
+                    def test_return_200(self,subject2):
+                        assert subject2.status_code == 200
+
+                    def test_return_count_2(self, subject, subject2):
+                        post = Post.objects.first()
+                        assert post.likes_cnt == 2
+
+                class Test_두번좋아요_실패:
+                    @pytest.fixture(scope="function")
+                    def subject2(self, client, headers, url_get):
+                        url = url_get + "/likes"
+                        return client.post(url, headers={
+                            "Authorization": "zI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYB"})
+
+                    def test_return_401(self, subject2):
+                        assert subject2.status_code == 401
+
+                    def test_return_count_1(self,subject, subject2):
+                        post = Post.objects.first()
+                        assert post.likes_cnt == 1
+
