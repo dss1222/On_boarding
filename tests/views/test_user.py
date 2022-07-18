@@ -11,7 +11,7 @@ class Test_user:
     def logged_in_user(self):
         return UserFactory.create()
 
-    class Test_signup:
+    class Test_회원가입:
         @pytest.fixture()
         def form(self):
             return {
@@ -25,19 +25,19 @@ class Test_user:
             return client.post("users/signup", data=json.dumps(form))
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_user_count_up(self, subject):
+            def test_유저수_증가(self, subject):
                 total_user_cnt = User.objects.count()
                 print(total_user_cnt)
                 assert total_user_cnt == 1
 
-            def test_username_OK(self, subject, form):
+            def test_유저네임_확인(self, subject, form):
                 username = User.objects()[0].username
                 assert username == form["username"]
 
-        class Test_중복계정:
+        class Test_중복계정_확인:
             @pytest.fixture
             def form(self, logged_in_user):
                 return {
@@ -46,11 +46,35 @@ class Test_user:
                     "passwordCheck": "test1234"
                 }
 
-            def test_return_400(self, subject):
+            def test_400_반환(self, subject):
                 # print(subject)
                 assert subject.status_code == 409
 
-    class Test_login():
+        class Test_비밀번호확인_틀림:
+            @pytest.fixture()
+            def form(self, logged_in_user):
+                return {
+                    "username": logged_in_user.username,
+                    "password": "test1234",
+                    "passwordCheck": "test123"
+                }
+
+            def test_400_반환(self, subject):
+                assert subject.status_code == 409
+
+        class Test_폼_이상함:
+            @pytest.fixture()
+            def form(self, logged_in_user):
+                return {
+                    "usernae": logged_in_user.username,
+                    "password": "test1234",
+                    "password": "test1234",
+                }
+
+            def test_400_반환(self, subject):
+                assert subject.status_code == 422
+
+    class Test_로그인():
         @pytest.fixture()
         def form(self, logged_in_user):
             return {
@@ -63,7 +87,7 @@ class Test_user:
             return client.post("/users/login", data=json.dumps(form))
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
         class Test_아이디틀림:
@@ -74,7 +98,7 @@ class Test_user:
                     "password": "test1234",
                 }
 
-            def test_return_400(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 401
 
         class Test_비밀번호틀림:
@@ -85,10 +109,21 @@ class Test_user:
                     "password": "test12345678",
                 }
 
-            def test_return_400(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 401
 
-    class Test_update:
+        class Test_폼_이상함:
+            @pytest.fixture()
+            def form(self, logged_in_user):
+                return {
+                    "user": logged_in_user.username,
+                    "password": "test1234"
+                }
+
+            def test_400_반환(self, subject):
+                assert subject.status_code == 422
+
+    class Test_정보수정:
         @pytest.fixture()
         def form(self):
             return {
@@ -100,7 +135,7 @@ class Test_user:
             return client.patch("/users/update", headers=headers, data=json.dumps(form))
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
         class Test_중복된닉네임일경우:
@@ -110,5 +145,5 @@ class Test_user:
                     "username": logged_in_user.username
                 }
 
-            def test_return_200(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 409
