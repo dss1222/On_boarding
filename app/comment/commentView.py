@@ -3,6 +3,7 @@ from flask_classful import FlaskView, route
 from app.comment.commentSchema import CommentCreateSchema, CommentListSchema
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
+from bson import ObjectId
 
 
 class CommentView(FlaskView):
@@ -27,15 +28,14 @@ class CommentView(FlaskView):
     @route('/<comment_id>/recomment', methods=['POST'])
     @login_required
     @comment_validator
-    def create_recomment(self, comment_id):
-        recomment = CommentCreateSchema().load(json.loads(request.data))
+    def create_recomment(self, board_id, post_id, comment_id):
+        re_comment = CommentCreateSchema().load(json.loads(request.data))
         comment = Comment.objects(id=comment_id).get()
 
-        recomment.user = g.user_id
-
-        recomment.save()
-
-        comment.update(push__recomment=str(recomment))
+        re_comment.user = g.user_id
+        re_comment.post = ObjectId(post_id)
+        re_comment.recomment = ObjectId(comment_id)
+        re_comment.save()
 
         return Success()
 
@@ -43,9 +43,18 @@ class CommentView(FlaskView):
     @route('/<comment_id>/likes', methods=['POST'])
     @login_required
     @comment_validator
-    def like_comment(self, comment_id):
+    def like_comment(self, comment_id, board_id, post_id):
         comment = Comment.objects(id=comment_id).get()
         comment.like(g.user_id)
+        return Success()
+
+    # 좋아요 취소
+    @route('/<comment_id>/unlikes', methods=['POST'])
+    @login_required
+    @comment_validator
+    def unlike_comment(self, comment_id, board_id, post_id):
+        comment = Comment.objects(id=comment_id).get()
+        comment.cancel_like(g.user_id)
         return Success()
 
     @route('/order/created', methods=['GET'])

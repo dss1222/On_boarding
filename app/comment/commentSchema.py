@@ -23,12 +23,11 @@ class CommentListSchema(Schema):
     id = fields.Str()
     content = fields.Str()
     user = fields.Nested(UserSchemaName)
-    total_likes_cnt = fields.Method('count_likes')
-    total_recomment_cnt = fields.Method('count_recomment')
+    likes_cnt = fields.Int()
+    recomments = fields.Method('get_comments')
 
-    def count_likes(self, obj):
-        return len(obj.likes)
+    def get_comments(self, obj):
+        comment_list = CommentListSchema(many=True).dump(Comment.objects(recomment=obj.id))
+        return comment_list
 
-    def count_recomment(self, obj):
-        return len(obj.recomment)
 
