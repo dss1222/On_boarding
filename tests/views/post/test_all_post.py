@@ -64,15 +64,17 @@ class Test_Post:
             def test_return_401(self, subject):
                 assert subject.status_code == 401
 
+    # 조회기능
     class Test_post_get:
         @pytest.fixture(scope="function")
-        def subject(self, url_get,headers,client):
+        def subject(self, url_get, headers, client):
             return client.get(url_get, headers=headers)
 
         def test_details_post(self, subject):
             post = Post.objects.first()
             assert post.title == 'test_title'
 
+    # 검색기능
     class Test_search_tag:
         @pytest.fixture(scope="function")
         def subject(self, headers, client, board, post):
@@ -84,7 +86,18 @@ class Test_Post:
             posts = body['posts']
             assert posts[0]['title'] == "test_title"
 
+        @pytest.fixture(scope="function")
+        def subject2(self, headers, client, board, post):
+            url = "/boards/" + str(board.id) + "/posts/search/없는검색어"
+            return client.get(url, headers=headers)
 
+        def test_search_tag_no(self, subject2):
+            body = subject2.json
+            posts = body['posts']
+            with pytest.raises(IndexError):
+                print(posts[0])
+
+    # 수정 기능
     class Test_post_update:
         @pytest.fixture()
         def form(self):
@@ -95,7 +108,7 @@ class Test_Post:
             }
 
         @pytest.fixture(scope="function")
-        def subject(self, client, headers, form, board, post, url_get):
+        def subject(self, client, headers, form, url_get):
             return client.patch(url_get, headers=headers, data=json.dumps(form))
 
         class Test_정상요청:
@@ -109,6 +122,7 @@ class Test_Post:
                 assert post.tag == form['tag']
                 assert post.user == logged_in_user
 
+    # 삭제 기능
     class Test_post_delete:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, board, post, url_get):
@@ -119,8 +133,12 @@ class Test_Post:
                 assert subject.status_code == 200
 
             def test_return_count_zero(self, subject):
-                post_cnt = Post.objects.count()
+                post_cnt = Post.objects(is_deleted=False).count()
                 assert post_cnt == 0
+
+            def test_return_count_one_soft_delete(self, subject):
+                post_cnt = Post.objects(is_deleted=True).count()
+                assert post_cnt == 1
 
         class Test_삭제_실패:
             @pytest.fixture(scope="function")
@@ -131,8 +149,9 @@ class Test_Post:
                 assert subject.status_code == 401
 
             def test_return_count_1(self, subject):
-                assert Post.objects.count() == 1
+                assert Post.objects(is_deleted=False).count() == 1
 
+    # 좋아요 기능
     class Test_post_likes:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get):
@@ -147,10 +166,10 @@ class Test_Post:
                 post = Post.objects.first()
                 assert post.likes_cnt == 1
 
-            class Test_두번좋아요:
+            class Test_좋아요취소:
                 @pytest.fixture(scope="function")
                 def subject2(self, client, headers, url_get):
-                    url = url_get + "/likes"
+                    url = url_get + "/unlikes"
                     return client.post(url, headers=headers)
 
                 def test_return_200(self, subject2):
@@ -164,9 +183,10 @@ class Test_Post:
                     @pytest.fixture(scope="function")
                     def subject2(self, client, headers, url_get):
                         url = url_get + "/likes"
-                        return client.post(url, headers={"Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"})
+                        return client.post(url, headers={
+                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"})
 
-                    def test_return_200(self,subject2):
+                    def test_return_200(self, subject2):
                         assert subject2.status_code == 200
 
                     def test_return_count_2(self, subject, subject2):
@@ -183,7 +203,6 @@ class Test_Post:
                     def test_return_401(self, subject2):
                         assert subject2.status_code == 401
 
-                    def test_return_count_1(self,subject, subject2):
+                    def test_return_count_1(self, subject, subject2):
                         post = Post.objects.first()
                         assert post.likes_cnt == 1
-
