@@ -16,7 +16,8 @@ class Test_user:
         def form(self):
             return {
                 "username": "test",
-                "password": "test1234"
+                "password": "test1234",
+                "passwordCheck": "test1234"
             }
 
         @pytest.fixture(scope="function")
@@ -41,7 +42,8 @@ class Test_user:
             def form(self, logged_in_user):
                 return {
                     "username": logged_in_user.username,
-                    "password": "test1234"
+                    "password": "test1234",
+                    "passwordCheck": "test1234"
                 }
 
             def test_return_400(self, subject):

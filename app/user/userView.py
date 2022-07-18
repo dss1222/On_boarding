@@ -1,4 +1,6 @@
 import json
+
+import bcrypt
 import jwt
 
 from flask_classful import FlaskView, route
@@ -29,12 +31,8 @@ class UserView(FlaskView):
     # @use_kwargs(UserCreateSchema(), locations=('json',))
     @user_create_validator
     def signup(self):
-
-        user = UserCreateSchema().load(json.loads(request.data))
-
-        if user is False:
-            return {'message': '이미 등록된 ID입니다.'}, 409
-
+        user_schema = UserCreateSchema().load(json.loads(request.data))
+        user = User(username=user_schema['username'], password=user_schema['password'])
         user.save()
         return Success()
 
@@ -45,8 +43,7 @@ class UserView(FlaskView):
         login_request = json.loads(request.data)
         user = UserSchema().load(login_request)
 
-        if not user:
-            return {'message': '존재하지 않는 사용자입니다.'}, 401
+        user = User.objects(username=user['username']).get()
 
         if not user.check_password(login_request['password']):
             return {'message': '잘못된 비밀번호 입니다'}, 401
