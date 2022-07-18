@@ -17,6 +17,14 @@ def NotCreatedUser():
     return jsonify("게시글 작성자가 아닙니다"), 403
 
 
+def NotUnLikedUser():
+    return jsonify("해당 유저는 좋아요를 한 적이 없습니다"), 403
+
+
+def NotLikedUser():
+    return jsonify("해당 유저는 이미 좋아요를 한 적이 있습니다"), 403
+
+
 def NotFoundPost():
     return jsonify("해당 게시글이 존재하지 않습니다."), 404
 

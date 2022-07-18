@@ -1,7 +1,9 @@
 from flask_classful import FlaskView, route
 from bson import ObjectId
 
+from mongoengine import *
 from app.post.postSchema import PostCreateSchema, PostDetailSchema, PostListSchema, PostUpdateSchema
+from app.comment.commentModel import Comment
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
 
@@ -39,6 +41,17 @@ class PostView(FlaskView):
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
+    @route('/order/pagination', methods=['GET'])
+    @login_required
+    @board_validator
+    def get_posts(self, board_id, page=1):
+        if request.args:
+            page = int(request.args.get('page'))
+
+        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').paginate(page=page, per_page=10)
+        post_list = PostListSchema(many=True).dump(post_limit_10)
+        return {'posts': post_list}, 200
+
     # 게시글 조회 좋아요 많은 순 10개
     @route('/order/likes', methods=['GET'])
     @login_required
@@ -46,8 +59,6 @@ class PostView(FlaskView):
     def get_posts_likes(self, board_id):
         post_limit_10 = Post.objects(board=board_id).order_by('-created_at').order_by('-likes_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
-        # posts = Post.objects.aggregate({'$sort': {{"$size": "$likes"}: -1}})
-        # post_list = PostListSchema(many=True).dump(posts)
         return {'posts': post_list}, 200
 
     # 게시글 조회 댓글 많은 순 10개
@@ -66,7 +77,7 @@ class PostView(FlaskView):
         data = PostUpdateSchema().load(json.loads(request.data))
         post = Post.objects(id=post_id).get()
 
-        if not post.is_user(g.user_id):
+        if not post.find_user(g.user_id):
             return NotCreatedUser()
         post.update(**data)
 
@@ -78,12 +89,17 @@ class PostView(FlaskView):
     @login_required
     @post_validator
     def delete_post(self, post_id, board_id):
-        post = Post.objects(id=post_id).get()
+        post = Post.objects(board=board_id, id=post_id).get()
 
-        if not post.is_user(g.user_id):
+        if not post.find_user(g.user_id):
             return NotCreatedUser()
 
-        post.delete()
+        comment_list = Comment.objects(post=post_id)
+
+        for comment in comment_list:
+            comment.soft_delete()
+
+        post.soft_delete()
         return Success()
 
     # 좋아요 기능
@@ -93,6 +109,15 @@ class PostView(FlaskView):
     def like_post(self, board_id, post_id):
         post = Post.objects(board=board_id, id=post_id).get()
         post.like(g.user_id)
+        return Success()
+
+    # 좋아요 취소
+    @route('/<post_id>/unlikes', methods=['POST'])
+    @login_required
+    @post_validator
+    def unlike_post(self, board_id, post_id):
+        post = Post.objects(board=board_id, id=post_id).get()
+        post.cancel_like(g.user_id)
         return Success()
 
     # 태그 검색 기능
