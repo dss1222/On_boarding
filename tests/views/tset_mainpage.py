@@ -10,7 +10,7 @@ from tests.factories.post import PostFactory
 from app.post.postModel import Post
 
 
-class Test_post_get:
+class Test_메인페이지:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -27,7 +27,7 @@ class Test_post_get:
     def url_get(self, board):
         return "/boards/" + str(board.id) + "/posts/order"
 
-    class Test_order_by_likes:
+    class Test_좋아요순_정렬:
         @pytest.fixture()
         def posts(self, board, logged_in_user):
             PostFactory.create(board=board.id, user=logged_in_user.id, likes_cnt=20)
@@ -41,14 +41,14 @@ class Test_post_get:
             return client.get(url, headers=headers)
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_return_list(self, subject):
+            def test_리스트_반환(self, subject):
                 body = subject.json
                 assert len(body['posts']) == 10
 
-            def test_return_most_many_likes(self, subject):
+            def test_좋아요_가장많은것_반환(self, subject):
                 body = subject.json
                 posts = body['posts']
                 max_num = posts[0]['likes_cnt']
@@ -57,7 +57,7 @@ class Test_post_get:
                 assert max_num == 20
                 assert min_num == 0
 
-    class Test_order_by_comments:
+    class Test_댓글_많은순:
         @pytest.fixture()
         def posts(self, board, logged_in_user):
             PostFactory.create(board=board.id, user=logged_in_user.id, comments_cnt=20)
@@ -71,14 +71,14 @@ class Test_post_get:
             return client.get(url, headers=headers)
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_return_list(self, subject):
+            def test_리스트_반환(self, subject):
                 body = subject.json
                 assert len(body['posts']) == 10
 
-            def test_return_most_many_likes(self, subject):
+            def test_좋아요가장많은것_반환(self, subject):
                 body = subject.json
                 posts = body['posts']
                 max_num = posts[0]['comments_cnt']

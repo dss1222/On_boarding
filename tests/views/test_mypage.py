@@ -8,7 +8,7 @@ from tests.factories.post import PostFactory
 from app.post.postModel import Post
 from app.user.userModel import User
 
-class Test_mypage:
+class Test_마이페이지:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -25,11 +25,11 @@ class Test_mypage:
     def url_get(self, board, post):
         return "/users/mypage"
 
-    class Test_mypost:
+    class Test_내가작성한게시글:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get, post):
             url = url_get + "/posts"
             return client.get(url, headers=headers)
 
-        def test_return_200(self, subject):
+        def test_200_반환(self, subject):
             assert subject.status_code == 200

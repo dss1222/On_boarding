@@ -15,7 +15,7 @@ class PostFactory(MongoEngineFactory):
 
     user = factory.SubFactory(UserFactory)
     board = factory.SubFactory(BoardFactory)
-    title = "test_title"
-    content = "test_content"
-    tag = "test_tag"
+    title = fuzzy.FuzzyText(length=10, prefix='post_')
+    content = fuzzy.FuzzyText(length=20, prefix='post_')
+    tag = fuzzy.FuzzyText(length=10, prefix='post_')
     created_at = factory.LazyAttribute(lambda _: datetime.utcnow())

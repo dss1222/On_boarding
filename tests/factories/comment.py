@@ -14,5 +14,5 @@ class CommentFactory(MongoEngineFactory):
 
     post = factory.SubFactory(PostFactory)
     user = factory.SubFactory(UserFactory)
-    content = fuzzy.FuzzyText(prefix='comment_')
+    content = fuzzy.FuzzyText(length=10, prefix='comment_')
     created_at = factory.LazyAttribute(lambda _: datetime.utcnow())
