@@ -9,10 +9,12 @@ from marshmallow import ValidationError
 
 from app.utils.ErrorHandler import *
 from app.user.userSchema import UserSchema, UserCreateSchema
+from app.post.postSchema import PostCreateSchema
 from app.post.postModel import Post
 from app.board.boardSchema import BoardCreateSchema
 from app.board.boardModel import Board
 from app.comment.commentModel import Comment
+from app.comment.commentSchema import CommentCreateSchema
 
 from app.user.userModel import User
 
@@ -80,6 +82,18 @@ def user_create_validator(f):
 
     return decorated_view
 
+def create_post_validator(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        try:
+            PostCreateSchema().load(json.loads(request.data))
+        except ValidationError as err:
+            return jsonify(err.messages), 422
+
+        return f(*args, **kwargs)
+
+    return decorated_view
+
 
 def post_validator(f):
     @wraps(f)
@@ -91,6 +105,19 @@ def post_validator(f):
 
         if not Post.objects(id=post_id, is_deleted=False):
             return NotFoundPost()
+
+        return f(*args, **kwargs)
+
+    return decorated_view
+
+
+def create_comment_validator(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        try:
+            CommentCreateSchema().load(json.loads(request.data))
+        except ValidationError as err:
+            return jsonify(err.messages), 422
 
         return f(*args, **kwargs)
 
@@ -119,7 +146,7 @@ def board_crate_validator(f):
         try:
             BoardCreateSchema().load(json.loads(request.data))
         except ValidationError as err:
-            CreatedError()
+            return jsonify(err.messages), 422
 
         return f(*args, **kwargs)
 

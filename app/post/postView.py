@@ -12,6 +12,7 @@ class PostView(FlaskView):
     # 게시글 작성
     @route('', methods=['POST'])
     @login_required
+    @create_post_validator
     @board_validator
     def create_post(self, board_id):
         post = PostCreateSchema().load(json.loads(request.data))
@@ -28,27 +29,25 @@ class PostView(FlaskView):
     @board_validator
     def get_posts_detail(self, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id).get()
-        print(g.user_id)
-        print(g.username)
         return PostDetailSchema().dump(post), 200
 
     # 게시글 조회 최신순 10개
-    @route('/order/created', methods=['GET'])
+    @route('/order/created_at', methods=['GET'])
     @login_required
     @board_validator
     def get_posts(self, board_id):
-        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').limit(10)
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
     @route('/order/pagination', methods=['GET'])
     @login_required
     @board_validator
-    def get_posts(self, board_id, page=1):
+    def get_posts_pagination(self, board_id, page=1):
         if request.args:
             page = int(request.args.get('page'))
 
-        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').paginate(page=page, per_page=10)
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').paginate(page=page, per_page=10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
@@ -57,7 +56,7 @@ class PostView(FlaskView):
     @login_required
     @board_validator
     def get_posts_likes(self, board_id):
-        post_limit_10 = Post.objects(board=board_id).order_by('-created_at').order_by('-likes_cnt').limit(10)
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').order_by('-likes_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
@@ -65,7 +64,7 @@ class PostView(FlaskView):
     @route('/order/comments', methods=['GET'])
     @login_required
     def get_posts_comeents(self, board_id):
-        post_limit_10 = Post.objects(board=board_id).order_by('-comments_cnt').limit(10)
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-comments_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
