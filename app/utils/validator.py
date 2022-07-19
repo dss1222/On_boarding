@@ -15,8 +15,8 @@ from app.board.boardSchema import BoardCreateSchema
 from app.board.boardModel import Board
 from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentCreateSchema
-
 from app.user.userModel import User
+from app.utils.enumOrder import OrderEnum
 
 
 # 로그인 인증 데코레이터
@@ -84,6 +84,7 @@ def user_create_validator(f):
 
     return decorated_view
 
+
 def create_post_validator(f):
     @wraps(f)
     def decorated_view(*args, **kwargs):
@@ -107,6 +108,24 @@ def post_validator(f):
 
         if not Post.objects(id=post_id, is_deleted=False):
             return NotFoundPost()
+
+        return f(*args, **kwargs)
+
+    return decorated_view
+
+
+def post_list_validator(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        params = request.args.to_dict()
+
+        if "page" not in params or "size" not in params or "orderby" not in params or int(params["page"]) < 1:
+            return NotApiError()
+
+        try:
+            result = OrderEnum[str(params["orderby"])].value
+        except KeyError:
+            return NotApiError()
 
         return f(*args, **kwargs)
 

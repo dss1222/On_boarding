@@ -9,9 +9,8 @@ from flask_cors import CORS
 def create_app(test_config=None):
     app = Flask(__name__)
     app.debug = True
-    phase = os.environ.get('PHASE', 'local').lower()
 
-    if test_config != None:
+    if test_config is not None:
         app.config.from_object('app.config.TestConfig')
         mongoengine.connect("test", host=TestConfig.MONGO_URI)
     else:
