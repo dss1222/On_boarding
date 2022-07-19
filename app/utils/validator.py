@@ -70,10 +70,6 @@ def user_create_validator(f):
             if not User.objects(username=user['username']):
                 if user['password'] != user['passwordCheck']:
                     return {'message': '비밀번호 확인이 틀렸습니다'}, 409
-                password = bcrypt.hashpw(user['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-                user['password'] = password
-                user_create = User(username=user['username'], password=user['password'])
-                user_create.save()
             else:
                 return {'message': '이미 등록된 ID입니다.'}, 409
 

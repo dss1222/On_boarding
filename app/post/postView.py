@@ -52,7 +52,7 @@ class PostView(FlaskView):
                         (page - 1) * size: page * size]
         post_list = PostListSchema(many=True).dump(post_limit_10)
 
-        return jsonify(post_list), 200
+        return {'posts': post_list}, 200
 
     # 게시글 수정 <회원정보 일치해야 함>
     @route('/<post_id>', methods=['PATCH'])
