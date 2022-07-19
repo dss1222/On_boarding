@@ -43,3 +43,6 @@ def WrongId():
 
 def CreatedError():
     return jsonify("잘못된 요청입니다"), 422
+
+def NotApiError():
+    return jsonify("잘못된 요청입니다"), 422

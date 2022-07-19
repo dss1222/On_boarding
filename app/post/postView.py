@@ -1,11 +1,15 @@
 from flask_classful import FlaskView, route
 from bson import ObjectId
+from enum import Enum
 
 from mongoengine import *
 from app.post.postSchema import *
 from app.comment.commentModel import Comment
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
+
+from app.utils.enumOrder import OrderEnum
+
 
 
 class PostView(FlaskView):
@@ -24,58 +28,31 @@ class PostView(FlaskView):
 
     # 게시글 상세조회 1개
     @route('/<post_id>', methods=['GET'])
-    @login_required
+    # @login_required
     @post_validator
     @board_validator
     def get_posts_detail(self, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id).get()
+        print(PostDetailSchema().dump(post))
         return PostDetailSchema().dump(post), 200
 
-    # 게시글 조회 최신순 10개
-    @route('/order/created_at', methods=['GET'])
+    # 게시글 리스트 조회
+    @route('/', methods=['GET'])
     @login_required
     @board_validator
-    def get_posts(self, board_id):
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').limit(10)
-        post_list = PostListSchema(many=True).dump(post_limit_10)
-        return {'posts': post_list}, 200
-
-    @route('/pagination', methods=['GET'])
-    @login_required
-    @board_validator
+    @post_list_validator
     def get_posts_pagination(self, board_id):
         params = request.args.to_dict()
 
-        if "page" not in params:
-            page = 1
-        else:
-            page = int(params["page"])
-        if "size" not in params:
-            size = 3
-        else:
-            size = int(params["size"])
+        page = int(params["page"])
+        size = int(params["size"])
+        order_by = OrderEnum[str(params["orderby"])].value
 
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at')[(page - 1) * size: page * size]
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by(order_by)[
+                        (page - 1) * size: page * size]
         post_list = PostListSchema(many=True).dump(post_limit_10)
+
         return jsonify(post_list), 200
-
-    # 게시글 조회 좋아요 많은 순 10개
-    @route('/order/likes', methods=['GET'])
-    @login_required
-    @board_validator
-    def get_posts_likes(self, board_id):
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').order_by(
-            '-likes_cnt').limit(10)
-        post_list = PostListSchema(many=True).dump(post_limit_10)
-        return {'posts': post_list}, 200
-
-    # 게시글 조회 댓글 많은 순 10개
-    @route('/order/comments', methods=['GET'])
-    @login_required
-    def get_posts_comeents(self, board_id):
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-comments_cnt').limit(10)
-        post_list = PostListSchema(many=True).dump(post_limit_10)
-        return {'posts': post_list}, 200
 
     # 게시글 수정 <회원정보 일치해야 함>
     @route('/<post_id>', methods=['PATCH'])

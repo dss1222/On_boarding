@@ -31,7 +31,6 @@ class PostDetailSchema(Schema):
 
     def get_comments(self, obj):
         comment_list = CommentListSchema(many=True).dump(Comment.objects(post=obj.id).order_by('created_at'))
-        print(comment_list)
         return comment_list
 
 
