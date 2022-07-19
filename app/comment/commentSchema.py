@@ -26,9 +26,10 @@ class CommentListSchema(Schema):
     user = fields.Nested(UserSchemaName)
     likes_cnt = fields.Int()
     recomments = fields.Method('get_comments')
+    # recomments = fields.Function(lambda comment, context: comment == context[])
 
     def get_comments(self, obj):
         comment_list = CommentListSchema(many=True).dump(Comment.objects(recomment=obj.id))
         return comment_list
-
+    #컨텍스트
 

@@ -31,6 +31,11 @@ class UserView(FlaskView):
     # @use_kwargs(UserCreateSchema(), locations=('json',))
     @user_create_validator
     def signup(self):
+        user = UserCreateSchema().load(json.loads(request.data))
+        password = bcrypt.hashpw(user['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        user['password'] = password
+        user_create = User(username=user['username'], password=user['password'])
+        user_create.save()
         return Success()
 
     # 로그인
@@ -67,16 +72,15 @@ class UserView(FlaskView):
     @route('/mypage/posts', methods=['GET'])
     @login_required
     def get_myposts(self):
-        post = Post.objects(user=g.user_id)
+        post = Post.objects(user=g.user_id, is_deleted=False)
         post_list = PostListSchema(many=True).dump(post)
-        print(g.user_id)
         return {'post': post_list}, 200
 
     # 내가 작성한 코멘트 조회
     @route('/mypage/comments', methods=['GET'])
     @login_required
     def get_mycomments(self):
-        comment = Comment.objects(user=g.user_id)
+        comment = Comment.objects(user=g.user_id, is_deleted=False)
         comment_list = CommentListSchema(many=True).dump(comment)
         return {'comment': comment_list}, 200
 
@@ -84,6 +88,6 @@ class UserView(FlaskView):
     @route('/mypage/posts/likes')
     @login_required
     def get_myposts_likes(self):
-        post = Post.objects(likes__exact=str(g.user_id))
+        post = Post.objects(likes__exact=str(g.user_id), is_deleted=False)
         post_list = PostListSchema(many=True).dump(post)
         return {'post': post_list}, 200
