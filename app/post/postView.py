@@ -28,7 +28,7 @@ class PostView(FlaskView):
 
     # 게시글 상세조회 1개
     @route('/<post_id>', methods=['GET'])
-    # @login_required
+    @login_required
     @post_validator
     @board_validator
     def get_posts_detail(self, post_id, board_id):
