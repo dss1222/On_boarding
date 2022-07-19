@@ -19,6 +19,7 @@ class CommentSchema(Schema):
     user = fields.Nested(UserSchemaName)
 
 
+# db조회 부분을 밖으로 빼고싶은데 빼는 방법을 모르겠습니다 ㅠㅠ
 class CommentListSchema(Schema):
     id = fields.Str()
     content = fields.Str()

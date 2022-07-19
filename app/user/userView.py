@@ -14,7 +14,7 @@ from app.user.userModel import User
 from app.utils.validator import user_create_validator, user_validator, login_required
 from app.utils.ErrorHandler import *
 
-from app.post.postSchema import PostListSchema
+from app.post.postSchema import *
 from app.post.postModel import Post
 from app.comment.commentSchema import CommentListSchema
 from app.comment.commentModel import Comment
@@ -31,9 +31,6 @@ class UserView(FlaskView):
     # @use_kwargs(UserCreateSchema(), locations=('json',))
     @user_create_validator
     def signup(self):
-        user_schema = UserCreateSchema().load(json.loads(request.data))
-        user = User(username=user_schema['username'], password=user_schema['password'])
-        user.save()
         return Success()
 
     # 로그인

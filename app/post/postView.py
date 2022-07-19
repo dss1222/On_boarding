@@ -2,7 +2,7 @@ from flask_classful import FlaskView, route
 from bson import ObjectId
 
 from mongoengine import *
-from app.post.postSchema import PostCreateSchema, PostDetailSchema, PostListSchema, PostUpdateSchema
+from app.post.postSchema import *
 from app.comment.commentModel import Comment
 from app.utils.validator import *
 from app.utils.ErrorHandler import *
@@ -40,23 +40,32 @@ class PostView(FlaskView):
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
-    @route('/order/pagination', methods=['GET'])
+    @route('/pagination', methods=['GET'])
     @login_required
     @board_validator
-    def get_posts_pagination(self, board_id, page=1):
-        if request.args:
-            page = int(request.args.get('page'))
+    def get_posts_pagination(self, board_id):
+        params = request.args.to_dict()
 
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').paginate(page=page, per_page=10)
+        if "page" not in params:
+            page = 1
+        else:
+            page = int(params["page"])
+        if "size" not in params:
+            size = 3
+        else:
+            size = int(params["size"])
+
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at')[(page - 1) * size: page * size]
         post_list = PostListSchema(many=True).dump(post_limit_10)
-        return {'posts': post_list}, 200
+        return jsonify(post_list), 200
 
     # 게시글 조회 좋아요 많은 순 10개
     @route('/order/likes', methods=['GET'])
     @login_required
     @board_validator
     def get_posts_likes(self, board_id):
-        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').order_by('-likes_cnt').limit(10)
+        post_limit_10 = Post.objects(board=board_id, is_deleted=False).order_by('-created_at').order_by(
+            '-likes_cnt').limit(10)
         post_list = PostListSchema(many=True).dump(post_limit_10)
         return {'posts': post_list}, 200
 
