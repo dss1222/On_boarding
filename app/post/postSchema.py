@@ -49,3 +49,13 @@ class PostUpdateSchema(Schema):
     title = fields.Str()
     content = fields.Str()
     tag = fields.Str()
+
+# paginate 구현 못함
+# class PostListInBoardSchema(PostListSchema):
+#     class Meta:
+#         fields = ['id', 'user', 'title', 'likes_count', 'comments_count', "created_at"]
+#
+#
+# class PaginatedPostsInBoardSchema(Schema):
+#     total = fields.Integer()
+#     items = fields.Nested(PostListInBoardSchema, many=True)

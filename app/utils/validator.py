@@ -72,6 +72,8 @@ def user_create_validator(f):
                     return {'message': '비밀번호 확인이 틀렸습니다'}, 409
                 password = bcrypt.hashpw(user['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
                 user['password'] = password
+                user_create = User(username=user['username'], password=user['password'])
+                user_create.save()
             else:
                 return {'message': '이미 등록된 ID입니다.'}, 409
 
@@ -132,7 +134,7 @@ def comment_validator(f):
         if len(comment_id) != 24:
             return WrongId()
 
-        if not Comment.objects(id=comment_id) or Comment.objects(is_deleted=True):
+        if not Comment.objects(id=comment_id, is_deleted=False):
             return NotFoundComment()
 
         return f(*args, **kwargs)

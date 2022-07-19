@@ -10,6 +10,7 @@ class CommentView(FlaskView):
     # 코멘트 작성
     @route('/', methods=['POST'])
     @login_required
+    @create_comment_validator
     @post_validator
     def create_comment(self, post_id, board_id):
         comment = CommentCreateSchema().load(json.loads(request.data))
