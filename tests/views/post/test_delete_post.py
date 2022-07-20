@@ -10,7 +10,7 @@ from app.post.postModel import Post
 from app.comment.commentModel import Comment
 
 
-class Test_Post:
+class Test_게시글_삭제:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -22,6 +22,11 @@ class Test_Post:
     @pytest.fixture()
     def post(self, board, logged_in_user):
         return PostFactory.create(board=board.id, user=logged_in_user.id)
+
+    @pytest.fixture()
+    def comment(self, post, logged_in_user):
+        for _ in range(10):
+            CommentFactory.create(post=post.id, user=logged_in_user.id, is_deleted=False)
 
     @pytest.fixture()
     def post_delete(self, board, logged_in_user):
@@ -36,35 +41,39 @@ class Test_Post:
         return "/boards/" + str(board.id) + "/posts/" + str(post_delete.id)
 
     # 삭제 기능
-    class Test_post_delete:
+    class Test_게시글삭제:
         class Test_삭제_정상요청:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, board, post, url_get):
                 return client.delete(url_get, headers=headers)
 
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_return_count_zero(self, subject):
+            def test_게시글갯수_0개_반환(self, subject):
                 post_cnt = Post.objects(is_deleted=False).count()
                 assert post_cnt == 0
 
-            def test_return_count_one_soft_delete(self, subject):
+            def test_softdelete_1개_반환(self, subject):
                 post_cnt = Post.objects(is_deleted=True).count()
                 assert post_cnt == 1
 
-        class Test_삭제_실패:
+            def test_댓글갯수_0개_반환(self, comment, subject):
+                comment_cnt = Comment.objects(is_deleted=False).count()
+                assert comment_cnt == 0
+
+        class Test_삭제실패:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, board, post, url_get):
                 return client.delete(url_get, headers={"Authorization": "asd"})
 
-            def test_return_401(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 401
 
-            def test_return_count_1(self, subject):
+            def test_게시글갯수_1개_반환(self, subject):
                 assert Post.objects(is_deleted=False).count() == 1
 
-            def test_return_comment_ten(self, subject):
+            def test_댓글갯수_10개_반환(self, comment, subject):
                 comment_cnt = Comment.objects(is_deleted=False).count()
                 assert comment_cnt == 10
 
@@ -73,5 +82,5 @@ class Test_Post:
                 def subject(self, client, headers, board, post, url_get_deleted):
                     return client.delete(url_get_deleted, headers=headers)
 
-                def test_return_404(self, subject):
+                def test_400_반환(self, subject):
                     assert subject.status_code == 404

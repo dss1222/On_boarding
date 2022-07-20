@@ -8,7 +8,7 @@ from tests.factories.post import PostFactory
 from app.post.postModel import Post
 
 
-class Test_Post:
+class Test_게시글수정:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -34,7 +34,7 @@ class Test_Post:
         return "/boards/" + str(board.id) + "/posts/" + str(post_delete.id)
 
     # 수정 기능
-    class Test_post_update:
+    class Test_게시글수정:
         @pytest.fixture()
         def form(self):
             return {
@@ -48,10 +48,10 @@ class Test_Post:
             return client.patch(url_get, headers=headers, data=json.dumps(form))
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_return_update_get(self, subject, form, logged_in_user):
+            def test_내용_검증(self, subject, form, logged_in_user):
                 post = Post.objects.first()
                 assert post.title == 'test_title_update'
                 assert post.content == form['content']
@@ -63,6 +63,6 @@ class Test_Post:
             def subject(self, client, headers, form, url_get_deleted):
                 return client.patch(url_get_deleted, headers=headers, data=json.dumps(form))
 
-            def test_return_404(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 404
 
