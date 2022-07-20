@@ -36,8 +36,8 @@ class Test_메인페이지:
                 PostFactory.create(board=board.id, user=logged_in_user.id, likes_cnt=random.randint(1, 20))
 
         @pytest.fixture()
-        def subject(self, client, headers, posts, url_get):
-            url = url_get + "/likes"
+        def subject(self, client, headers, board, posts, url_get):
+            url = "/boards/" + str(board.id) + "/posts/?page=1&size=20&orderby=likes"
             return client.get(url, headers=headers)
 
         class Test_정상요청:
@@ -66,8 +66,8 @@ class Test_메인페이지:
                 PostFactory.create(board=board.id, user=logged_in_user.id, comments_cnt=random.randint(1, 20))
 
         @pytest.fixture()
-        def subject(self, client, headers, posts, url_get):
-            url = url_get + "/comments"
+        def subject(self, client, headers, board, posts, url_get):
+            url = "/boards/" + str(board.id) + "/posts/?page=1&size=20&orderby=comments"
             return client.get(url, headers=headers)
 
         class Test_정상요청:

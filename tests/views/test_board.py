@@ -18,7 +18,7 @@ class Test_Board:
     def create_board(self, logged_in_user):
         return BoardFactory.create(name="testname",user=logged_in_user.id)
 
-    class Test_create_board:
+    class Test_게시판_작성:
         @pytest.fixture()
         def form(self):
             return {"name": "testname"}
