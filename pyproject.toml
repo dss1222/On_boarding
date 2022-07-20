@@ -22,6 +22,7 @@ mongomock = "^4.1.2"
 webargs = "^8.1.0"
 flask-apispec = "^0.11.1"
 Faker = "^13.15.0"
+flask-classful-apispec = "^0.1.8"
 
 [tool.poetry.dev-dependencies]
 

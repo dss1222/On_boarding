@@ -11,7 +11,6 @@ from app.utils.ErrorHandler import *
 from app.utils.enumOrder import OrderEnum
 
 
-
 class PostView(FlaskView):
     # 게시글 작성
     @route('', methods=['POST'])
