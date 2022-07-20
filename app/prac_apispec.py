@@ -1,16 +1,46 @@
-import flask
-from webargs import fields
-from flask_apispec import use_kwargs, marshal_with
+import json
+from flask import Flask
+from flask_classful import FlaskView
+from flask_classful_apispec import APISpec
+from marshmallow import Schema, fields
 
-from app.user.userModel import User
-from app.user.userSchema import UserCreateSchema
+app = Flask(__name__)
 
-from app.post.postModel import Post
-from app.post.postSchema import PostListSchema
+app.config["DOC_TITLE"] = "Swagger petstore"
+app.config["DOC_VERSION"] = "0.1.1"
+app.config["DOC_OPEN_API_VERSION"] = "3.0.2"
 
-app = flask.Flask(__name__)
-@app.route('/pets')
-@use_kwargs({'species': fields.Str()})
-@marshal_with(PostListSchema(many=True))
-def list_Post(**kwargs):
-    return Post.query.filter_by(**kwargs).all()
+spec = APISpec(app)
+
+pets = [
+    {'id': 0, 'name': 'Kitty', 'category': 'cat'},
+    {'id': 1, 'name': 'Coco', 'category': 'dog'}
+]
+
+
+class PetSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+    category = fields.String()
+
+
+class PetView(FlaskView):
+    def index(self):
+        """A pet api endpoint.
+        ---
+        description: Get a list of pets
+        responses:
+          200:
+            schema: PetSchema
+        """
+        return PetSchema(many=True).dumps(pets)
+
+
+PetView.register(app)
+
+with app.test_request_context():
+    spec.paths(PetView, app)
+print(json.dumps(spec.to_dict(), indent=2))
+
+if __name__ == "__main__":
+    app.run()

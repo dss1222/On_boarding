@@ -8,7 +8,7 @@ from tests.factories.post import PostFactory
 from app.post.postModel import Post
 
 
-class Test_Post:
+class Test_게시글좋아요:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -33,17 +33,17 @@ class Test_Post:
     def url_get_deleted(self, board, post_delete):
         return "/boards/" + str(board.id) + "/posts/" + str(post_delete.id)
 
-    class Test_post_likes:
+    class Test_게시글_좋아요:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get):
             url = url_get + "/likes"
             return client.post(url, headers=headers)
 
         class Test_정상요청:
-            def test_return_200(self, subject):
+            def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
-            def test_return_likecnt_one(self, subject):
+            def test_좋아요갯수_1개반환(self, subject):
                 post = Post.objects.first()
                 assert post.likes_cnt == 1
 
@@ -53,10 +53,10 @@ class Test_Post:
                     url = url_get + "/unlikes"
                     return client.post(url, headers=headers)
 
-                def test_return_200(self, subject2):
+                def test_200_반환(self, subject2):
                     assert subject2.status_code == 200
 
-                def test_return_count_0(self, subject, subject2):
+                def test_좋아요갯수_0개반환(self, subject, subject2):
                     post = Post.objects.first()
                     assert post.likes_cnt == 0
 
@@ -67,10 +67,10 @@ class Test_Post:
                         return client.post(url, headers={
                             "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"})
 
-                    def test_return_200(self, subject2):
+                    def test_200_반환(self, subject2):
                         assert subject2.status_code == 200
 
-                    def test_return_count_2(self, subject, subject2):
+                    def test_좋아요갯수_2개반환(self, subject, subject2):
                         post = Post.objects.first()
                         assert post.likes_cnt == 2
 
@@ -81,10 +81,10 @@ class Test_Post:
                         return client.post(url, headers={
                             "Authorization": "zI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYB"})
 
-                    def test_return_401(self, subject2):
+                    def test_400_반환(self, subject2):
                         assert subject2.status_code == 401
 
-                    def test_return_count_1(self, subject, subject2):
+                    def test_좋아요갯수_1개반환(self, subject, subject2):
                         post = Post.objects.first()
                         assert post.likes_cnt == 1
 
@@ -94,5 +94,5 @@ class Test_Post:
                 url = url_get_deleted + "/likes"
                 return client.post(url, headers=headers)
 
-            def test_return_404(self, subject):
+            def test_400_반환(self, subject):
                 assert subject.status_code == 404

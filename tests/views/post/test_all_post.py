@@ -6,9 +6,11 @@ from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 
 from app.post.postModel import Post
+from tests.views.post.test_create_post import Test_게시글작성
 
 
 class Test_Post:
+
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -70,21 +72,21 @@ class Test_Post:
         def subject(self, url_get, headers, client):
             return client.get(url_get, headers=headers)
 
-        def test_details_post(self, subject):
-            post = Post.objects.first()
-            assert post.title == 'test_title'
+        def test_details_post(self, subject, post):
+            post_object = Post.objects.first()
+            assert post_object.title == post.title
 
     # 검색기능
     class Test_search_tag:
         @pytest.fixture(scope="function")
         def subject(self, headers, client, board, post):
-            url = "/boards/" + str(board.id) + "/posts/search/test"
+            url = "/boards/" + str(board.id) + "/posts/search/" + str(post.tag)
             return client.get(url, headers=headers)
 
-        def test_search_tag(self, subject):
+        def test_search_tag(self, subject, post):
             body = subject.json
             posts = body['posts']
-            assert posts[0]['title'] == "test_title"
+            assert posts[0]['title'] == post.title
 
         @pytest.fixture(scope="function")
         def subject2(self, headers, client, board, post):
