@@ -4,7 +4,7 @@ from app.board.boardModel import Board
 
 
 class BoardCreateSchema(Schema):
-    name = fields.Str(required=True)
+    name = fields.String(required=True)
 
     @post_load()
     def create_board(self, data, **kwargs):
