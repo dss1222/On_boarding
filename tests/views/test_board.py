@@ -9,7 +9,7 @@ from tests.factories.user import UserFactory
 from tests.factories.board import BoardFactory
 
 
-class Test_Board:
+class Describe_BoardView:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()
@@ -18,7 +18,7 @@ class Test_Board:
     def create_board(self, logged_in_user):
         return BoardFactory.create(name="testname",user=logged_in_user.id)
 
-    class Test_게시판_작성:
+    class Describe_게시판_작성:
         @pytest.fixture()
         def form(self):
             return {"name": "testname"}
@@ -27,7 +27,6 @@ class Test_Board:
         def subject(self, client, headers, form):
             return client.post("/boards/", data=json.dumps(form), headers=headers)
 
-        class Test_정상요청:
-            def test_return_200(self, subject):
-                print(subject)
-                assert subject.status_code == 200
+        def test_return_200(self, subject):
+            print(subject)
+            assert subject.status_code == 200

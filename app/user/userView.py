@@ -13,29 +13,29 @@ from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.user.userModel import User
 from app.utils.validator import user_create_validator, user_validator, login_required
 from app.utils.ErrorHandler import *
+from app.utils.error.ApiErrorSchema import ApiErrorSchema
 
 from app.post.postSchema import *
 from app.post.postModel import Post
 from app.comment.commentSchema import CommentListSchema
 from app.comment.commentModel import Comment
+from app.utils.response.ResponseDto import ResponseDto
 
 
 class UserView(FlaskView):
-    # decorators = (
-    #     doc(tags=['User']),
-    # )
+    decorators = (doc(tags=['User']),)
 
     # 회원가입
     @route('/signup', methods=['POST'])
-    # @doc(description='User 회원가입', summary='User 회원가입')
-    # @use_kwargs(UserCreateSchema(), locations=('json',))
+    @doc(description='User 회원가입', summary='User 회원가입')
+    @use_kwargs(UserCreateSchema(), locations=['json'])
+    @marshal_with(ApiErrorSchema(), code=422, description="입력값이 잘못됨")
+    @marshal_with(ApiErrorSchema(), code=409, description="이미 존재하는 사용자")
     @user_create_validator
-    def signup(self):
-        user = UserCreateSchema().load(json.loads(request.data))
-        password = bcrypt.hashpw(user['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        user['password'] = password
-        user_create = User(username=user['username'], password=user['password'])
-        user_create.save()
+    def signup(self, username=None, password=None, passwordCheck=None):
+        secret_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        user = User(username=username, password=secret_password)
+        user.save()
         return Success()
 
     # 로그인
@@ -53,7 +53,7 @@ class UserView(FlaskView):
         token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
                            current_app.config['SECRET'], current_app.config['ALGORITHM'])
         # print(jwt.decode())
-        return jsonify(token), 200
+        return token, 200
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])

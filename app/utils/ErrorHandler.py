@@ -2,7 +2,7 @@ from flask import jsonify
 
 
 def Success():
-    return jsonify("성공"), 200
+    return "성공", 200
 
 
 def NotLoginUser():
