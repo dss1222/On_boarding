@@ -2,7 +2,12 @@ from flask import jsonify
 
 
 def Success():
-    return "성공", 200
+    return "성다"
+
+
+def NotCreateUsername():
+    return {"message": "중복된 유저입니다",
+            "status_code": "409"}
 
 
 def NotLoginUser():
@@ -42,7 +47,8 @@ def WrongId():
 
 
 def CreatedError():
-    return jsonify("잘못된 요청입니다"), 422
+    return "잘못된 요청입니다"
+
 
 def NotApiError():
     return jsonify("잘못된 요청입니다"), 422

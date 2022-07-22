@@ -1,5 +1,7 @@
 import datetime
 import bcrypt
+import jwt
+from flask import current_app
 
 from flask_mongoengine import Document
 from mongoengine import StringField, DateTimeField
