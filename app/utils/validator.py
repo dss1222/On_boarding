@@ -17,6 +17,7 @@ from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentCreateSchema
 from app.user.userModel import User
 from app.utils.enumOrder import OrderEnum
+from app.utils.error.ApiErrorSchema import *
 
 
 # 로그인 인증 데코레이터
@@ -49,9 +50,6 @@ def user_validator(f):
         try:
             user = UserSchema().load(json.loads(request.data))
 
-            if not User.objects(username=user['username']):
-                return {'message': '존재하지 않는 사용자입니다.'}, 401
-
         except ValidationError as err:
             return jsonify(err.messages), 422
 
@@ -67,14 +65,8 @@ def user_create_validator(f):
         try:
             user = UserCreateSchema().load(json.loads(request.data))
 
-            if not User.objects(username=user['username']):
-                if user['password'] != user['passwordCheck']:
-                    return {'message': '비밀번호 확인이 틀렸습니다'}, 409
-            else:
-                return {'message': '이미 등록된 ID입니다.'}, 409
-
         except ValidationError as err:
-            return jsonify(err.messages), 422
+            return ApiError(message="잘못된 요청입니다"), 422
 
         return f(*args, **kwargs)
 
@@ -163,7 +155,7 @@ def board_crate_validator(f):
         try:
             BoardCreateSchema().load(json.loads(request.data))
         except ValidationError as err:
-            return jsonify(err.messages), 422
+            return ErrorResponseDto(CreatedError())
 
         return f(*args, **kwargs)
 

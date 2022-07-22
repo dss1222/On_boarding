@@ -5,10 +5,14 @@ from flask import Flask
 from app.config import Config, TestConfig
 from flask_cors import CORS
 
+__version__ = "0.1.0"
+
 
 def create_app(test_config=None):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
     app.debug = True
+
+    app.config.from_object('app.config.Config')
 
     if test_config is not None:
         app.config.from_object('app.config.TestConfig')
@@ -21,16 +25,5 @@ def create_app(test_config=None):
     from app.utils.viewhandler import register_api
 
     register_api(app)
-
-    # app.config.update({
-    #     'APISPEC_SPEC': APISpec(
-    #         title="Title",
-    #         version="1.0.0",
-    #         openapi_version="3.0.2",
-    #         plugins=[MarshmallowPlugin()],
-    #     ),
-    #     'APISPEC_SWAGGER_URL': '/swagger-json',
-    #     'APISPEC_SWAGGER_UI_URL' : '/swagger/'
-    # })
 
     return app

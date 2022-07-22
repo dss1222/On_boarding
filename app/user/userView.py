@@ -2,6 +2,7 @@ import json
 
 import bcrypt
 import jwt
+import marshmallow.exceptions
 
 from flask_classful import FlaskView, route
 from flask import request, g, current_app
@@ -13,13 +14,12 @@ from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.user.userModel import User
 from app.utils.validator import user_create_validator, user_validator, login_required
 from app.utils.ErrorHandler import *
-from app.utils.error.ApiErrorSchema import ApiErrorSchema
+from app.utils.error.ApiErrorSchema import *
 
 from app.post.postSchema import *
 from app.post.postModel import Post
 from app.comment.commentSchema import CommentListSchema
 from app.comment.commentModel import Comment
-from app.utils.response.ResponseDto import ResponseDto
 
 
 class UserView(FlaskView):
@@ -28,45 +28,55 @@ class UserView(FlaskView):
     # 회원가입
     @route('/signup', methods=['POST'])
     @doc(description='User 회원가입', summary='User 회원가입')
-    @use_kwargs(UserCreateSchema(), locations=['json'])
-    @marshal_with(ApiErrorSchema(), code=422, description="입력값이 잘못됨")
-    @marshal_with(ApiErrorSchema(), code=409, description="이미 존재하는 사용자")
+    @use_kwargs(UserCreateSchema())
+    @marshal_with(ApiErrorSchema, code=200, description="성공")
+    @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
+    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @user_create_validator
-    def signup(self, username=None, password=None, passwordCheck=None):
-        secret_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        user = User(username=username, password=secret_password)
-        user.save()
-        return Success()
+    def post(self, user=None):
+        if User.objects(username=user.username):
+            return NotCreateUsername()
+        else:
+            user.save()
+            return SuccessDto(), 200
 
     # 로그인
     @route('/login', methods=['POST'])
+    @doc(description='User 로그인', summary='User 로그인')
+    @use_kwargs(UserSchema())
+    @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
+    @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
+    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @user_validator
-    def login(self):
-        login_request = json.loads(request.data)
-        user = UserSchema().load(login_request)
+    def login(self, user=None):
 
-        user = User.objects(username=user['username']).get()
+        if not user:
+            return NotUser()
 
-        if not user.check_password(login_request['password']):
-            return {'message': '잘못된 비밀번호 입니다'}, 401
+        if not user.check_password(request.json["password"]):
+            return NotPassword()
 
         token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
                            current_app.config['SECRET'], current_app.config['ALGORITHM'])
         # print(jwt.decode())
-        return token, 200
+        return AuthToken.create(token_=token)
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
+    @doc(description='User 정보 수정', summary='Username 수정')
+    @use_kwargs(UserUpdateSchema())
+    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
+    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @login_required
-    def update_user(self):
-        data = UserUpdateSchema().load(json.loads(request.data))
+    def update_user(self, username=None):
         user = User.objects(id=g.user_id).get()
 
-        if not User.objects(username=data['username']):
-            user.update(**data)
-            return Success()
+        if not User.objects(username=username):
+            user.update(username=username)
+            return SuccessDto(), 200
         else:
-            return {'message': '이미 등록된 ID입니다'}, 409
+            return NotCreateUsername()
 
     # 내가 쓴글 조회
     @route('/mypage/posts', methods=['GET'])
