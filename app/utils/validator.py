@@ -1,6 +1,6 @@
 import json
 import jwt
-import bcrypt
+from flask_apispec import marshal_with
 
 from functools import wraps
 from flask import request, g, current_app
@@ -23,6 +23,7 @@ from app.utils.error.ApiErrorSchema import *
 # 로그인 인증 데코레이터
 def login_required(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")
     def decorated_function(*args, **kwargs):
 
         if not 'Authorization' in request.headers:
@@ -46,12 +47,13 @@ def login_required(f):
 #  유저 validation check
 def user_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         try:
             user = UserSchema().load(json.loads(request.data))
 
         except ValidationError as err:
-            return jsonify(err.messages), 422
+            return defaultError()
 
         return f(*args, **kwargs)
 
@@ -66,7 +68,7 @@ def user_create_validator(f):
             user = UserCreateSchema().load(json.loads(request.data))
 
         except ValidationError as err:
-            return ApiError(message="잘못된 요청입니다"), 422
+            return ApiError(message=err.messages), 422
 
         return f(*args, **kwargs)
 
@@ -79,7 +81,7 @@ def create_post_validator(f):
         try:
             PostCreateSchema().load(json.loads(request.data))
         except ValidationError as err:
-            return jsonify(err.messages), 422
+            return ApiError(message=err.messages), 422
 
         return f(*args, **kwargs)
 
@@ -88,6 +90,7 @@ def create_post_validator(f):
 
 def post_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
     def decorated_view(*args, **kwargs):
         post_id = kwargs['post_id']
 
@@ -102,18 +105,33 @@ def post_validator(f):
     return decorated_view
 
 
+def post_user_validator(f):
+    @wraps(f)
+    @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
+    @marshal_with(ApiErrorSchema, code=401, description="작성자가 아님")
+    def decorated_function(*args, **kwargs):
+        post = Post.objects(id=kwargs["post_id"])
+        if (not post) or post.get().is_deleted:
+            return NotFoundPost()
+        elif post.get().user.id != g.user_id:
+            return NotCreatedUser()
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 def post_list_validator(f):
     @wraps(f)
     def decorated_view(*args, **kwargs):
         params = request.args.to_dict()
 
         if "page" not in params or "size" not in params or "orderby" not in params or int(params["page"]) < 1:
-            return NotApiError()
+            return defaultError()
 
         try:
             result = OrderEnum[str(params["orderby"])].value
         except KeyError:
-            return NotApiError()
+            return defaultError()
 
         return f(*args, **kwargs)
 
@@ -126,7 +144,7 @@ def create_comment_validator(f):
         try:
             CommentCreateSchema().load(json.loads(request.data))
         except ValidationError as err:
-            return jsonify(err.messages), 422
+            return ApiError(message=err.messages), 422
 
         return f(*args, **kwargs)
 
@@ -155,7 +173,7 @@ def board_crate_validator(f):
         try:
             BoardCreateSchema().load(json.loads(request.data))
         except ValidationError as err:
-            return ErrorResponseDto(CreatedError())
+            return err
 
         return f(*args, **kwargs)
 
@@ -164,6 +182,7 @@ def board_crate_validator(f):
 
 def board_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=404, description="없는 게시판")
     def decorated_view(*args, **kwargs):
         board_id = kwargs['board_id']
 
@@ -171,7 +190,7 @@ def board_validator(f):
             return WrongId()
 
         if not Board.objects(id=board_id):
-            return NotFoundComment()
+            return NotFoundBoard()
 
         return f(*args, **kwargs)
 

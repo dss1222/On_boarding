@@ -1,13 +1,8 @@
-import json
-
-import bcrypt
 import jwt
-import marshmallow.exceptions
 
 from flask_classful import FlaskView, route
 from flask import request, g, current_app
 from bson.json_util import dumps
-from webargs import fields
 from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
@@ -46,7 +41,6 @@ class UserView(FlaskView):
     @use_kwargs(UserSchema())
     @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
-    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @user_validator
     def login(self, user=None):
 
@@ -70,9 +64,8 @@ class UserView(FlaskView):
     @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @login_required
     def update_user(self, username=None):
-        user = User.objects(id=g.user_id).get()
-
         if not User.objects(username=username):
+            user = User.objects(id=g.user_id).get()
             user.update(username=username)
             return SuccessDto(), 200
         else:

@@ -22,8 +22,9 @@ def register_swagger(bp):
 
 def register_api(app):
     UserView.register(api, route_base='/users', trailing_slash=False)
-    PostView.register(api, route_base='/boards/<board_id>/posts', trailing_slash=False)
-    CommentView.register(api, route_base='/boards/<board_id>/posts/<post_id>/comments', trailing_slash=False)
+    PostView.register(api, route_base='/boards/<string:board_id>/posts', trailing_slash=False)
+    CommentView.register(api, route_base='/boards/<string:board_id>/posts/<string:'
+                                         'post_id>/comments', trailing_slash=False)
     BoardView.register(api, route_base='/boards', trailing_slash=False)
 
     register_swagger(api)
