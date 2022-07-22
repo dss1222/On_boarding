@@ -9,6 +9,7 @@ from bson import ObjectId
 class CommentView(FlaskView):
     # 코멘트 작성
     @route('/', methods=['POST'])
+    @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
     @create_comment_validator
     @post_validator
@@ -23,10 +24,11 @@ class CommentView(FlaskView):
         post.update(push__comments=str(comment))
         post.update(inc__comments_cnt=1)
 
-        return Success()
+        return SuccessDto()
 
     # 대댓글
-    @route('/<comment_id>/recomment', methods=['POST'])
+    @route('/<string:comment_id>/recomment', methods=['POST'])
+    @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
     @comment_validator
     def create_recomment(self, board_id, post_id, comment_id):
@@ -38,26 +40,29 @@ class CommentView(FlaskView):
         re_comment.recomment = ObjectId(comment_id)
         re_comment.save()
 
-        return Success()
+        return SuccessDto()
 
     # 좋아요 기능
-    @route('/<comment_id>/likes', methods=['POST'])
+    @route('/<string:comment_id>/likes', methods=['POST'])
+    @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
     @comment_validator
     def like_comment(self, comment_id, board_id, post_id):
         comment = Comment.objects(id=comment_id).get()
         comment.like(g.user_id)
-        return Success()
+        return SuccessDto()
 
     # 좋아요 취소
-    @route('/<comment_id>/unlikes', methods=['POST'])
+    @route('/<string:comment_id>/unlikes', methods=['POST'])
+    @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
     @comment_validator
     def unlike_comment(self, comment_id, board_id, post_id):
         comment = Comment.objects(id=comment_id).get()
         comment.cancel_like(g.user_id)
-        return Success()
+        return SuccessDto()
 
+    #댓글 조회
     @route('/order/created', methods=['GET'])
     @login_required
     @post_validator

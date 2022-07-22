@@ -14,8 +14,7 @@ class PostCreateSchema(Schema):
 
     @post_load()
     def create_post(self, data, **kwargs):
-        post = Post(**data)
-        return post
+        return {'post': Post(**data)}
 
 
 class PostDetailSchema(Schema):
@@ -48,6 +47,10 @@ class PostUpdateSchema(Schema):
     title = fields.Str()
     content = fields.Str()
     tag = fields.Str()
+
+    @post_load()
+    def update_post(self, data, **kwargs):
+        return {'post': Post(**data)}
 
 # paginate 구현 못함
 # class PostListInBoardSchema(PostListSchema):
