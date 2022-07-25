@@ -45,7 +45,7 @@ class Test_게시글_삭제:
         class Test_삭제_정상요청:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, board, post, url_get):
-                return client.delete(url_get, headers=headers)
+                return client.delete(url_get, headers=headers, content_type="application/json")
 
             def test_200_반환(self, subject):
                 assert subject.status_code == 200
@@ -68,7 +68,7 @@ class Test_게시글_삭제:
                 return client.delete(url_get, headers={"Authorization": "asd"})
 
             def test_400_반환(self, subject):
-                assert subject.status_code == 401
+                assert subject.status_code == 403
 
             def test_게시글갯수_1개_반환(self, subject):
                 assert Post.objects(is_deleted=False).count() == 1

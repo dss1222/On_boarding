@@ -40,7 +40,7 @@ class Test_댓글작성:
 
         @pytest.fixture(scope="function")
         def subject(self, client, headers, form, url_get):
-            return client.post(url_get, headers=headers, data=json.dumps(form))
+            return client.post(url_get, headers=headers, data=json.dumps(form), content_type="application/json")
 
         class Test_댓글_생성:
             def test_200_반환(self, subject):
@@ -83,7 +83,7 @@ class Test_댓글작성:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, form, url_get, comment):
                 url = url_get + str(comment.id) + "/recomment"
-                return client.post(url, headers=headers, data=json.dumps(form))
+                return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
             def test_200_반환(self, subject):
                 assert subject.status_code == 200

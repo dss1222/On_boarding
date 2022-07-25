@@ -18,7 +18,7 @@ class Test_게시글작성:
 
     @pytest.fixture()
     def post(self, board, logged_in_user):
-        return PostFactory.create(board=board.id, user=logged_in_user.id)
+        return PostFactory.create(board=board.id, user=logged_in_user.id, content_type="application/json")
 
     @pytest.fixture()
     def url_get(self, board, post):
@@ -36,7 +36,7 @@ class Test_게시글작성:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, form, board):
             url = "/boards/" + str(board.id) + "/posts"
-            return client.post(url, headers=headers, data=json.dumps(form))
+            return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
         class Test_정상요청:
             def test_200_반환(self, subject):
@@ -49,7 +49,7 @@ class Test_게시글작성:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, form):
                 url = "/boards/" + "asdaasd" + "/posts"
-                return client.post(url, headers=headers, data=json.dumps(form))
+                return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
             def test_400_반환(self, subject):
                 assert subject.status_code == 404
@@ -58,10 +58,10 @@ class Test_게시글작성:
             @pytest.fixture(scope="function")
             def subject(self, client, form, board):
                 url = "/boards/" + str(board.id) + "/posts"
-                return client.post(url, headers={"Authorization": "asd"}, data=json.dumps(form))
+                return client.post(url, headers={"Authorization": "asd"}, data=json.dumps(form), content_type="application/json")
 
             def test_400_반환(self, subject):
-                assert subject.status_code == 401
+                assert subject.status_code == 403
 
         class Test_입력오류:
             @pytest.fixture()

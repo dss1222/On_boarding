@@ -67,14 +67,15 @@ class PostView(FlaskView):
     @post_user_validator
     def update_post(self, post_id, board_id, post):
         try:
-            Post.objects(id=post_id, user=g.user_id,is_deleted=False)
+            Post.objects(id=post_id, user=g.user_id,is_deleted=False).update(**request.json)
+
             return SuccessDto()
         except marshmallow.exceptions.ValidationError as err:
             return ApiError(message=err.messages), 422
 
     # 게시글 삭제
     @route('/<string:post_id>', methods=['DELETE'])
-    @doc(description='게시글 수정', summary='게시글 수정')
+    @doc(description='게시글 삭제', summary='게시글 삭제')
     @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
     @post_user_validator

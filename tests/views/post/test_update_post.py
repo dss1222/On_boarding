@@ -45,7 +45,7 @@ class Test_게시글수정:
 
         @pytest.fixture(scope="function")
         def subject(self, client, headers, form, url_get):
-            return client.patch(url_get, headers=headers, data=json.dumps(form))
+            return client.patch(url_get, headers=headers, data=json.dumps(form), content_type="application/json")
 
         class Test_정상요청:
             def test_200_반환(self, subject):
@@ -53,7 +53,7 @@ class Test_게시글수정:
 
             def test_내용_검증(self, subject, form, logged_in_user):
                 post = Post.objects.first()
-                assert post.title == 'test_title_update'
+                assert post.title == form['title']
                 assert post.content == form['content']
                 assert post.tag == form['tag']
                 assert post.user == logged_in_user
@@ -61,7 +61,7 @@ class Test_게시글수정:
         class Test_삭제된게시글:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, form, url_get_deleted):
-                return client.patch(url_get_deleted, headers=headers, data=json.dumps(form))
+                return client.patch(url_get_deleted, headers=headers, data=json.dumps(form), content_type="application/json")
 
             def test_400_반환(self, subject):
                 assert subject.status_code == 404

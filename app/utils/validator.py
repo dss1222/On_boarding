@@ -24,6 +24,8 @@ from app.utils.error.ApiErrorSchema import *
 def login_required(f):
     @wraps(f)
     @marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")
+    @marshal_with(ApiErrorSchema, code=422, description="유효하지 않은 토큰입니다")
+    @marshal_with(ApiErrorSchema, code=403, description="유효하지 않은 토큰입니다")
     def decorated_function(*args, **kwargs):
 
         if not 'Authorization' in request.headers:
@@ -78,6 +80,7 @@ def user_create_validator(f):
 
 def create_post_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         try:
             PostCreateSchema().load(json.loads(request.data))
@@ -122,6 +125,7 @@ def post_user_validator(f):
 
 def post_list_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         params = request.args.to_dict()
 

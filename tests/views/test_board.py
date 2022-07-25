@@ -18,14 +18,14 @@ class Describe_BoardView:
     def create_board(self, logged_in_user):
         return BoardFactory.create(name="testname",user=logged_in_user.id)
 
-    class Describe_게시판_작성:
+    class Test_게시판_작성:
         @pytest.fixture()
         def form(self):
             return {"name": "testname"}
 
         @pytest.fixture(scope="function")
         def subject(self, client, headers, form):
-            return client.post("/boards/", data=json.dumps(form), headers=headers)
+            return client.post("/boards/", data=json.dumps(form), headers=headers, content_type="application/json")
 
         def test_return_200(self, subject):
             print(subject)

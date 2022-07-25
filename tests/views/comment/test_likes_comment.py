@@ -43,7 +43,7 @@ class Test_댓글_좋아요:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get):
             url = url_get + "likes"
-            return client.post(url, headers=headers)
+            return client.post(url, headers=headers, content_type="application/json")
 
         class Test_좋아요:
             def test_200_반환(self, subject):
@@ -58,7 +58,7 @@ class Test_댓글_좋아요:
                 @pytest.fixture(scope="function")
                 def subject2(self, client, headers, url_get):
                     url = url_get + "unlikes"
-                    return client.post(url, headers=headers)
+                    return client.post(url, headers=headers, content_type="application/json")
 
                 def test_200_반환(self, subject2):
                     assert subject2.status_code == 200

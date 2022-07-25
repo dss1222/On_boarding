@@ -37,7 +37,7 @@ class Test_게시글조회:
     class Test_게시글_조회:
         @pytest.fixture(scope="function")
         def subject(self, url_get, headers, client):
-            return client.get(url_get, headers=headers)
+            return client.get(url_get, headers=headers, content_type="application/json")
 
         def test_게시글_자세히보기_내용검증(self, subject, post):
             post_object = Post.objects.first()
@@ -46,7 +46,7 @@ class Test_게시글조회:
         class Test_삭제된게시글_조회:
             @pytest.fixture(scope="function")
             def subject(self, url_get_deleted, headers, client):
-                return client.get(url_get_deleted, headers=headers)
+                return client.get(url_get_deleted, headers=headers, content_type="application/json")
 
             def test_자세히보기_400_반환(self, subject):
                 assert subject.status_code == 404
@@ -60,21 +60,20 @@ class Test_게시글조회:
             @pytest.fixture(scope="function")
             def subject(self, headers, client, board, post_list):
                 url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=created"
-                return client.get(url, headers=headers)
+                return client.get(url, headers=headers, content_type="application/json")
 
             def test_200_반환(self, subject):
                 assert subject.status_code == 200
 
             def test_게시글_갯수(self, subject):
                 body = subject.json
-                posts = body['posts']
-                assert len(posts) == 3
+                assert len(body) == 3
 
             class Test_페이징조회_에러:
                 @pytest.fixture()
                 def subject(self, headers, client, board, post_list):
                     url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=create"
-                    return client.get(url, headers=headers)
+                    return client.get(url, headers=headers, content_type="application/json")
 
                 def test_400_반환(self, subject):
                     assert subject.status_code == 422
@@ -85,21 +84,19 @@ class Test_게시글조회:
         @pytest.fixture(scope="function")
         def subject(self, headers, client, board, post):
             url = "/boards/" + str(board.id) + "/posts/search/" + str(post.tag)
-            return client.get(url, headers=headers)
+            return client.get(url, headers=headers, content_type="application/json")
 
         def test_태그_검색(self, subject, post):
             body = subject.json
-            posts = body['posts']
-            assert posts[0]['title'] == post.title
-            assert len(posts) == 1
+            assert body[0]['title'] == post.title
+            assert len(body) == 1
 
         @pytest.fixture(scope="function")
         def subject2(self, headers, client, board, post):
             url = "/boards/" + str(board.id) + "/posts/search/없는검색어"
-            return client.get(url, headers=headers)
+            return client.get(url, headers=headers, content_type="application/json")
 
         def test_없는태그_검색(self, subject2):
             body = subject2.json
-            posts = body['posts']
             with pytest.raises(IndexError):
-                print(posts[0])
+                print(body[0])

@@ -37,7 +37,7 @@ class Test_게시글좋아요:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get):
             url = url_get + "/likes"
-            return client.post(url, headers=headers)
+            return client.post(url, headers=headers, content_type="application/json")
 
         class Test_정상요청:
             def test_200_반환(self, subject):
@@ -51,7 +51,7 @@ class Test_게시글좋아요:
                 @pytest.fixture(scope="function")
                 def subject2(self, client, headers, url_get):
                     url = url_get + "/unlikes"
-                    return client.post(url, headers=headers)
+                    return client.post(url, headers=headers, content_type="application/json")
 
                 def test_200_반환(self, subject2):
                     assert subject2.status_code == 200
@@ -65,7 +65,7 @@ class Test_게시글좋아요:
                     def subject2(self, client, headers, url_get):
                         url = url_get + "/likes"
                         return client.post(url, headers={
-                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"})
+                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"}, content_type="application/json")
 
                     def test_200_반환(self, subject2):
                         assert subject2.status_code == 200
@@ -79,10 +79,10 @@ class Test_게시글좋아요:
                     def subject2(self, client, headers, url_get):
                         url = url_get + "/likes"
                         return client.post(url, headers={
-                            "Authorization": "zI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYB"})
+                            "Authorization": "zI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYB"}, content_type="application/json")
 
                     def test_400_반환(self, subject2):
-                        assert subject2.status_code == 401
+                        assert subject2.status_code == 403
 
                     def test_좋아요갯수_1개반환(self, subject, subject2):
                         post = Post.objects.first()
@@ -92,7 +92,7 @@ class Test_게시글좋아요:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, url_get_deleted):
                 url = url_get_deleted + "/likes"
-                return client.post(url, headers=headers)
+                return client.post(url, headers=headers, content_type="application/json")
 
             def test_400_반환(self, subject):
                 assert subject.status_code == 404
