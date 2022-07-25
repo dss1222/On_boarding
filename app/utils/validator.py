@@ -63,6 +63,7 @@ def user_validator(f):
 # 회원가입 validation check
 def user_create_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         try:
             user = UserCreateSchema().load(json.loads(request.data))
@@ -93,7 +94,6 @@ def post_validator(f):
     @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
     def decorated_view(*args, **kwargs):
         post_id = kwargs['post_id']
-
         if len(post_id) != 24:
             return WrongId()
 
@@ -140,6 +140,7 @@ def post_list_validator(f):
 
 def create_comment_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         try:
             CommentCreateSchema().load(json.loads(request.data))
@@ -153,6 +154,8 @@ def create_comment_validator(f):
 
 def comment_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         comment_id = kwargs['comment_id']
 
@@ -169,6 +172,7 @@ def comment_validator(f):
 
 def board_crate_validator(f):
     @wraps(f)
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         try:
             BoardCreateSchema().load(json.loads(request.data))
@@ -183,6 +187,7 @@ def board_crate_validator(f):
 def board_validator(f):
     @wraps(f)
     @marshal_with(ApiErrorSchema, code=404, description="없는 게시판")
+    @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         board_id = kwargs['board_id']
 
