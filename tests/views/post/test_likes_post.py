@@ -65,7 +65,7 @@ class Test_게시글좋아요:
                     def subject2(self, client, headers, url_get):
                         url = url_get + "/likes"
                         return client.post(url, headers={
-                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYA"}, content_type="application/json")
+                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyZGUyNTFhNjEzNTU4NWJhYmQ4ZTUwYlwifSIsInVzZXJuYW1lIjoiXCJ0ZXN0MVwiIn0.ivmrC5xOYh-AOkuXyi6WVfWY1tDLMJlZxl_mYgJzOqc"}, content_type="application/json")
 
                     def test_200_반환(self, subject2):
                         assert subject2.status_code == 200
@@ -79,7 +79,7 @@ class Test_게시글좋아요:
                     def subject2(self, client, headers, url_get):
                         url = url_get + "/likes"
                         return client.post(url, headers={
-                            "Authorization": "zI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyYzc5YTAwYzUxMzZmZmQ3NjliZmRiN1wifSIsInVzZXJuYW1lIjoiXCJkc3MxMjIyNDdcIiJ9.0c12IDYOTc6PHf18yrdTF9seS6tP95dAEhZ6w7rFhYB"}, content_type="application/json")
+                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyZGUyNTFhNjEzNTU4NWJhYmQ4ZTUwYlwifSIsInVzZXJuYW1lIjoiXCJ0ZXN0MVwiIn0.ivmrC5xOYh-AOkuXyi6WVfWY1tDLMJlZxl_mYgJzOqc"}, content_type="application/json")
 
                     def test_400_반환(self, subject2):
                         assert subject2.status_code == 403

@@ -1,5 +1,6 @@
 import json
 import jwt
+import mongoengine.errors
 from flask_apispec import marshal_with
 
 from functools import wraps
@@ -40,6 +41,9 @@ def login_required(f):
 
         g.user_id = loads(payload['user_id'])  # 토큰에 있는 내 정보
         g.username = loads(payload['username'])
+
+        if not User.objects(id=g.user_id): # 토큰이 존재하는 토큰인지 확인하려면 유저를 검색해오는게 결국 api콜을 할때마다 db조회를 하기때문에 좋지 않아보입니다, 토큰의 유효성 검증을 어떻게 해야할까요
+            return NotInvalidToken()
 
         return f(*args, **kwargs)
 
@@ -111,12 +115,14 @@ def post_validator(f):
 def post_user_validator(f):
     @wraps(f)
     @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
-    @marshal_with(ApiErrorSchema, code=401, description="작성자가 아님")
+    @marshal_with(ApiErrorSchema, code=403, description="작성자가 아님")
     def decorated_function(*args, **kwargs):
         post = Post.objects(id=kwargs["post_id"])
         if (not post) or post.get().is_deleted:
             return NotFoundPost()
-        elif post.get().user.id != g.user_id:
+        try:
+            post.get().user.id != g.user_id
+        except mongoengine.errors.DoesNotExist:
             return NotCreatedUser()
         return f(*args, **kwargs)
 

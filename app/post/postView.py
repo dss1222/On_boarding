@@ -42,7 +42,7 @@ class PostView(FlaskView):
     # 게시글 리스트 조회
     @route('/', methods=['GET'])
     @doc(description='게시글 리스트 조회', summary='게시글 리스트 조회')
-    @marshal_with(PostListSchema(many=True), code=200, description="게시물 상세 정보")
+    @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
     @login_required
     @board_validator
     @post_list_validator
@@ -63,6 +63,7 @@ class PostView(FlaskView):
     @doc(description='게시글 수정', summary='게시글 수정')
     @use_kwargs(PostUpdateSchema())
     @marshal_with(SuccessSchema, code=200, description="성공")
+    @board_validator
     @login_required
     @post_user_validator
     def update_post(self, post_id, board_id, post):
@@ -78,6 +79,7 @@ class PostView(FlaskView):
     @doc(description='게시글 삭제', summary='게시글 삭제')
     @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
+    @board_validator
     @post_user_validator
     def delete_post(self, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -95,6 +97,7 @@ class PostView(FlaskView):
     @doc(summary="게시물 좋아요", description="게시물 좋아요")
     @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
+    @board_validator
     @post_validator
     def like_post(self, board_id, post_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -106,6 +109,7 @@ class PostView(FlaskView):
     @doc(summary="게시물 좋아요 취소", description="게시물 좋아요 취소")
     @marshal_with(SuccessSchema, code=200, description="성공")
     @login_required
+    @board_validator
     @post_validator
     def unlike_post(self, board_id, post_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -119,5 +123,5 @@ class PostView(FlaskView):
     @login_required
     @board_validator
     def search_post(self, board_id, search):
-        posts = Post.objects(tag__contains=str(search))
+        posts = Post.objects(tag__contains=str(search), is_deleted=False)
         return posts, 200
