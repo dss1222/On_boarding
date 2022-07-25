@@ -29,7 +29,7 @@ class Test_마이페이지:
         @pytest.fixture(scope="function")
         def subject(self, client, headers, url_get, post):
             url = url_get + "/posts"
-            return client.get(url, headers=headers)
+            return client.get(url, headers=headers, content_type="application/json")
 
         def test_200_반환(self, subject):
             assert subject.status_code == 200
