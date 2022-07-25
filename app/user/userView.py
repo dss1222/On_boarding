@@ -26,7 +26,6 @@ class UserView(FlaskView):
     @use_kwargs(UserCreateSchema())
     @marshal_with(ApiErrorSchema, code=200, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
-    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @user_create_validator
     def post(self, user=None):
         if User.objects(username=user.username):
