@@ -42,7 +42,7 @@ class PostView(FlaskView):
     # 게시글 리스트 조회
     @route('/', methods=['GET'])
     @doc(description='게시글 리스트 조회', summary='게시글 리스트 조회')
-    @marshal_with(PostListSchema(many=True), code=200, description="게시물 상세 정보")
+    @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
     @login_required
     @board_validator
     @post_list_validator

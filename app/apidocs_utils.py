@@ -7,7 +7,6 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from typing import Optional
 
-
 class ApiDocConverter(Converter):
     def get_operation(self, rule, view, parent=None):
         from flask_apispec.utils import resolve_annotations, merge_recursive
@@ -25,7 +24,15 @@ class ApiDocConverter(Converter):
         return merge_recursive([operation, docs])
 
     def get_responses(self, view, parent=None):
-        return super().get_responses(view, parent)
+        response = super().get_responses(view, parent)
+
+        for status_code in response:
+            result = {}
+            result['description'] = response[status_code]['description']
+            result['content'] = {}
+            result['content']['application/json'] = {'schema': response[status_code]['schema']}
+            response[status_code] = result
+        return response
 
     def get_parameters(self, rule, view, docs, parent=None):
         parameters = super().get_parameters(rule, view, docs)
