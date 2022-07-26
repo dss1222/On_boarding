@@ -10,16 +10,14 @@ from app.utils.enumOrder import OrderEnum
 
 
 class PostView(FlaskView):
-    decorators = (doc(tags=['POST']),)
+    decorators = (doc(tags=['POST']), login_required, board_validator)
 
     # 게시글 작성
     @route('', methods=['POST'])
     @doc(description='게시글 작성', summary='게시글 작성')
     @use_kwargs(PostCreateSchema())
     @marshal_with(SuccessSchema, code=200, description="성공")
-    @login_required
     @create_post_validator
-    @board_validator
     def create_post(self, board_id, post):
         post.board = ObjectId(board_id)
         post.user = g.user_id
@@ -31,9 +29,7 @@ class PostView(FlaskView):
     @route('/<string:post_id>', methods=['GET'])
     @doc(description='게시글 조회', summary='게시글 조회')
     @marshal_with(PostDetailSchema(), code=200, description="게시물 상세 정보")
-    @login_required
     @post_validator
-    @board_validator
     def get_posts_detail(self, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
         return post, 200
@@ -42,8 +38,6 @@ class PostView(FlaskView):
     @route('/', methods=['GET'])
     @doc(description='게시글 리스트 조회', summary='게시글 리스트 조회')
     @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
-    @login_required
-    @board_validator
     @post_list_validator
     def get_posts_pagination(self, board_id):
         params = request.args.to_dict()
@@ -53,7 +47,7 @@ class PostView(FlaskView):
         order_by = OrderEnum[str(params["orderby"])].value
 
         posts = Post.objects(board=board_id, is_deleted=False).order_by(order_by)[
-                        (page - 1) * size: page * size]
+                (page - 1) * size: page * size]
 
         return posts, 200
 
@@ -62,12 +56,10 @@ class PostView(FlaskView):
     @doc(description='게시글 수정', summary='게시글 수정')
     @use_kwargs(PostUpdateSchema())
     @marshal_with(SuccessSchema, code=200, description="성공")
-    @board_validator
-    @login_required
     @post_user_validator
     def update_post(self, post_id, board_id, post):
         try:
-            Post.objects(id=post_id, user=g.user_id,is_deleted=False).update(**request.json)
+            Post.objects(id=post_id, user=g.user_id, is_deleted=False).update(**request.json)
 
             return SuccessDto()
         except marshmallow.exceptions.ValidationError as err:
@@ -77,8 +69,6 @@ class PostView(FlaskView):
     @route('/<string:post_id>', methods=['DELETE'])
     @doc(description='게시글 삭제', summary='게시글 삭제')
     @marshal_with(SuccessSchema, code=200, description="성공")
-    @login_required
-    @board_validator
     @post_user_validator
     def delete_post(self, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -95,8 +85,6 @@ class PostView(FlaskView):
     @route('/<string:post_id>/likes', methods=['POST'])
     @doc(summary="게시물 좋아요", description="게시물 좋아요")
     @marshal_with(SuccessSchema, code=200, description="성공")
-    @login_required
-    @board_validator
     @post_validator
     def like_post(self, board_id, post_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -107,8 +95,6 @@ class PostView(FlaskView):
     @route('/<string:post_id>/unlikes', methods=['POST'])
     @doc(summary="게시물 좋아요 취소", description="게시물 좋아요 취소")
     @marshal_with(SuccessSchema, code=200, description="성공")
-    @login_required
-    @board_validator
     @post_validator
     def unlike_post(self, board_id, post_id):
         post = Post.objects(board=board_id, id=post_id).get()
@@ -119,8 +105,6 @@ class PostView(FlaskView):
     @route('/search/<search>', methods=['GET'])
     @doc(description='게시글 검색 조회', summary='게시글 검색 조회')
     @marshal_with(PostListSchema(many=True), code=200, description="게시물 상세 정보")
-    @login_required
-    @board_validator
     def search_post(self, board_id, search):
         posts = Post.objects(tag__contains=str(search), is_deleted=False)
         return posts, 200
