@@ -16,6 +16,7 @@ from app.utils.enumOrder import OrderEnum
 from app.utils.ApiErrorSchema import *
 from app.Model import *
 
+
 # 로그인 인증 데코레이터
 def login_required(f):
     @wraps(f)
@@ -37,9 +38,9 @@ def login_required(f):
         g.user_id = loads(payload['user_id'])  # 토큰에 있는 내 정보
         g.username = loads(payload['username'])
 
-        if not User.objects(id=g.user_id): # 토큰이 존재하는 토큰인지 확인하려면 유저를 검색해오는게 결국 api콜을 할때마다 db조회를 하기때문에 좋지 않아보입니다, 토큰의 유효성 검증을 어떻게 해야할까요
+        if not User.objects(id=g.user_id):
             return NotInvalidToken()
-
+        # marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")(f)
         return f(*args, **kwargs)
 
     return decorated_function
