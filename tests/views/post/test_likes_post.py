@@ -60,34 +60,6 @@ class Test_게시글좋아요:
                     post = Post.objects.first()
                     assert post.likes_cnt == 0
 
-                class Test_다른계정_두번좋아요:
-                    @pytest.fixture(scope="function")
-                    def subject2(self, client, headers, url_get):
-                        url = url_get + "/likes"
-                        return client.post(url, headers={
-                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyZGUyNTFhNjEzNTU4NWJhYmQ4ZTUwYlwifSIsInVzZXJuYW1lIjoiXCJ0ZXN0MVwiIn0.ivmrC5xOYh-AOkuXyi6WVfWY1tDLMJlZxl_mYgJzOqc"}, content_type="application/json")
-
-                    def test_200_반환(self, subject2):
-                        assert subject2.status_code == 200
-
-                    def test_좋아요갯수_2개반환(self, subject, subject2):
-                        post = Post.objects.first()
-                        assert post.likes_cnt == 2
-
-                class Test_두번좋아요_실패:
-                    @pytest.fixture(scope="function")
-                    def subject2(self, client, headers, url_get):
-                        url = url_get + "/likes"
-                        return client.post(url, headers={
-                            "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoie1wiJG9pZFwiOiBcIjYyZGUyNTFhNjEzNTU4NWJhYmQ4ZTUwYlwifSIsInVzZXJuYW1lIjoiXCJ0ZXN0MVwiIn0.ivmrC5xOYh-AOkuXyi6WVfWY1tDLMJlZxl_mYgJzOqc"}, content_type="application/json")
-
-                    def test_400_반환(self, subject2):
-                        assert subject2.status_code == 403
-
-                    def test_좋아요갯수_1개반환(self, subject, subject2):
-                        post = Post.objects.first()
-                        assert post.likes_cnt == 1
-
         class Test_삭제된게시글:
             @pytest.fixture(scope="function")
             def subject(self, client, headers, url_get_deleted):
