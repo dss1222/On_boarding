@@ -1,6 +1,6 @@
 from marshmallow import fields, Schema, post_load
 
-from app.board.boardModel import Board
+from app.Model import *
 
 
 class BoardCreateSchema(Schema):

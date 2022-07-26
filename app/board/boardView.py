@@ -1,14 +1,9 @@
-import traceback
-
-import marshmallow.exceptions
 from flask_classful import FlaskView, route
-from flask_apispec import marshal_with, doc, use_kwargs
+from flask_apispec import doc, use_kwargs
 
 from app.utils.validator import *
 from app.board.boardSchema import BoardCreateSchema
-from app.utils.error.ApiErrorSchema import *
-
-from flask_apispec import FlaskApiSpec
+from app.utils.ApiErrorSchema import *
 
 
 class BoardView(FlaskView):
