@@ -1,7 +1,7 @@
 from marshmallow import fields, Schema, post_load
 from app.Model import Comment
 
-from app.user.userSchema import UserSchemaName
+from app.serializers.userSchema import UserSchemaName
 
 
 class CommentCreateSchema(Schema):
