@@ -1,7 +1,7 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, marshal_with, doc
+from flask_apispec import use_kwargs, doc
 
-from app.comment.commentSchema import CommentCreateSchema, CommentListSchema, ReCommentCreateSchema
+from app.serializers.commentSchema import CommentListSchema, ReCommentCreateSchema
 from app.utils.validator import *
 from bson import ObjectId
 

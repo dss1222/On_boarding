@@ -1,12 +1,10 @@
-from flask import Flask, Blueprint, jsonify, render_template, url_for
+from flask import Blueprint, jsonify
 from flask_swagger_ui import get_swaggerui_blueprint
-from apispec.ext.marshmallow import MarshmallowPlugin
-from apispec import APISpec
 
-from app.user.userView import UserView
-from app.post.postView import PostView
-from app.comment.commentView import CommentView
-from app.board.boardView import BoardView
+from app.view.userView import UserView
+from app.view.postView import PostView
+from app.view.commentView import CommentView
+from app.view.boardView import BoardView
 
 api = Blueprint("api", __name__)
 

@@ -3,7 +3,7 @@ import pytest
 import json
 
 from tests.factories.user import UserFactory
-from app.user.userModel import User
+from app.Model import *
 
 
 class Test_user:

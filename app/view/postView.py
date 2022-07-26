@@ -1,9 +1,9 @@
 import marshmallow
 from flask_classful import FlaskView, route
 from bson import ObjectId
-from flask_apispec import use_kwargs, marshal_with, doc
+from flask_apispec import use_kwargs, doc
 
-from app.post.postSchema import *
+from app.serializers.postSchema import *
 from app.utils.validator import *
 
 from app.utils.enumOrder import OrderEnum

@@ -5,8 +5,7 @@ from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 
-from app.post.postModel import Post
-from app.user.userModel import User
+from app.Model import *
 
 class Test_마이페이지:
     @pytest.fixture()

@@ -2,7 +2,7 @@ from flask_classful import FlaskView, route
 from flask_apispec import doc, use_kwargs
 
 from app.utils.validator import *
-from app.board.boardSchema import BoardCreateSchema
+from app.serializers.boardSchema import BoardCreateSchema
 from app.utils.ApiErrorSchema import *
 
 
