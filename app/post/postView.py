@@ -5,7 +5,6 @@ from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.post.postSchema import *
 from app.utils.validator import *
-from app.utils.ErrorHandler import *
 
 from app.utils.enumOrder import OrderEnum
 

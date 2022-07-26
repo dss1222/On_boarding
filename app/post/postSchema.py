@@ -1,8 +1,7 @@
 from marshmallow import fields, Schema, post_load
-from app.post.postModel import Post
+from app.Model import Post, Comment
 
 from app.user.userSchema import UserSchemaName
-from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentListSchema
 from app.board.boardSchema import BoardSchema
 

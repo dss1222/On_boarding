@@ -1,5 +1,5 @@
 from marshmallow import fields, Schema, post_load
-from app.comment.commentModel import Comment
+from app.Model import Comment
 
 from app.user.userSchema import UserSchemaName
 

@@ -8,18 +8,13 @@ from flask import request, g, current_app
 from bson.json_util import loads
 from marshmallow import ValidationError
 
-from app.utils.ErrorHandler import *
 from app.user.userSchema import UserSchema, UserCreateSchema
 from app.post.postSchema import PostCreateSchema
-from app.post.postModel import Post
 from app.board.boardSchema import BoardCreateSchema
-from app.board.boardModel import Board
-from app.comment.commentModel import Comment
 from app.comment.commentSchema import CommentCreateSchema
-from app.user.userModel import User
 from app.utils.enumOrder import OrderEnum
-from app.utils.error.ApiErrorSchema import *
-
+from app.utils.ApiErrorSchema import *
+from app.Model import *
 
 # 로그인 인증 데코레이터
 def login_required(f):

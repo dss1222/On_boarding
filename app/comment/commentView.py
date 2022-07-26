@@ -3,7 +3,6 @@ from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.comment.commentSchema import CommentCreateSchema, CommentListSchema, ReCommentCreateSchema
 from app.utils.validator import *
-from app.utils.ErrorHandler import *
 from bson import ObjectId
 
 

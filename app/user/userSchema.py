@@ -2,8 +2,7 @@ import bcrypt
 
 from marshmallow import fields, Schema, post_load, pre_load
 from funcy import project
-from app.user.userModel import User
-
+from app.Model import User
 
 class UserCreateSchema(Schema):
     username = fields.String(required=True, unique=True)

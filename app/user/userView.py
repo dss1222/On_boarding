@@ -6,15 +6,11 @@ from bson.json_util import dumps
 from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
-from app.user.userModel import User
 from app.utils.validator import user_create_validator, user_validator, login_required
-from app.utils.ErrorHandler import *
-from app.utils.error.ApiErrorSchema import *
-
+from app.utils.ApiErrorSchema import *
+from app.Model import *
 from app.post.postSchema import *
-from app.post.postModel import Post
 from app.comment.commentSchema import CommentListSchema
-from app.comment.commentModel import Comment
 
 
 class UserView(FlaskView):
