@@ -1,4 +1,3 @@
-import os
 import mongoengine
 
 from flask import Flask
@@ -22,7 +21,7 @@ def create_app(test_config=None):
         mongoengine.connect("test", host=Config.MONGO_URI)
     CORS(app)
 
-    from app.utils.viewhandler import register_api
+    from app.view.viewhandler import register_api
 
     register_api(app)
 

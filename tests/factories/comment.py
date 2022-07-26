@@ -4,9 +4,10 @@ import factory
 from factory import fuzzy
 from factory.mongoengine import MongoEngineFactory
 
-from app.comment.commentModel import Comment
+from app.Model import Comment
 from tests.factories.post import PostFactory
 from tests.factories.user import UserFactory
+
 
 class CommentFactory(MongoEngineFactory):
     class Meta:

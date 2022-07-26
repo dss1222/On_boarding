@@ -5,12 +5,12 @@ from flask import request, g, current_app
 from bson.json_util import dumps
 from flask_apispec import use_kwargs, marshal_with, doc
 
-from app.user.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
+from app.serializers.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.utils.validator import user_create_validator, user_validator, login_required
 from app.utils.ApiErrorSchema import *
 from app.Model import *
-from app.post.postSchema import *
-from app.comment.commentSchema import CommentListSchema
+from app.serializers.postSchema import *
+from app.serializers.commentSchema import CommentListSchema
 
 
 class UserView(FlaskView):

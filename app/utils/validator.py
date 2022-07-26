@@ -8,10 +8,10 @@ from flask import request, g, current_app
 from bson.json_util import loads
 from marshmallow import ValidationError
 
-from app.user.userSchema import UserSchema, UserCreateSchema
-from app.post.postSchema import PostCreateSchema
-from app.board.boardSchema import BoardCreateSchema
-from app.comment.commentSchema import CommentCreateSchema
+from app.serializers.userSchema import UserSchema, UserCreateSchema
+from app.serializers.postSchema import PostCreateSchema
+from app.serializers.boardSchema import BoardCreateSchema
+from app.serializers.commentSchema import CommentCreateSchema
 from app.utils.enumOrder import OrderEnum
 from app.utils.ApiErrorSchema import *
 from app.Model import *
@@ -40,7 +40,7 @@ def login_required(f):
 
         if not User.objects(id=g.user_id):
             return NotInvalidToken()
-        # marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")(f)
+        marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")(f)
         return f(*args, **kwargs)
 
     return decorated_function
