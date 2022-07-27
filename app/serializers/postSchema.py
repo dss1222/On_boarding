@@ -42,6 +42,20 @@ class PostListSchema(Schema):
     created_at = fields.DateTime()
 
 
+class PostListFilterSchema(Schema):
+    page = fields.Int()
+    size = fields.Int()
+    orderby = fields.Str()
+
+    @post_load()
+    def list_filter(self, data, **kwargs):
+        return {
+            'page': data['page'],
+            'size': data['size'],
+            'orderby': data['orderby']
+        }
+
+
 class PostUpdateSchema(Schema):
     title = fields.Str()
     content = fields.Str()

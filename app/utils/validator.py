@@ -21,7 +21,6 @@ from app.Model import *
 def login_required(f):
     @wraps(f)
     @marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")
-    @marshal_with(ApiErrorSchema, code=422, description="유효하지 않은 토큰입니다")
     @marshal_with(ApiErrorSchema, code=403, description="유효하지 않은 토큰입니다")
     def decorated_function(*args, **kwargs):
 
@@ -40,9 +39,11 @@ def login_required(f):
 
         if not User.objects(id=g.user_id):
             return NotInvalidToken()
-        marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")(f)
+
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=401, description="유효하지 않은 토큰입니다")(f)
+    marshal_with(ApiErrorSchema, code=403, description="유효하지 않은 토큰입니다")(f)
     return decorated_function
 
 
@@ -59,6 +60,7 @@ def user_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -75,6 +77,7 @@ def user_create_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -89,6 +92,7 @@ def create_post_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -105,6 +109,7 @@ def post_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=404, description="없는 게시물")(f)
     return decorated_view
 
 
@@ -122,6 +127,8 @@ def post_user_validator(f):
             return NotCreatedUser()
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=404, description="없는 게시물")(f)
+    marshal_with(ApiErrorSchema, code=403, description="작성자가 아님")(f)
     return decorated_function
 
 
@@ -141,6 +148,7 @@ def post_list_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -155,6 +163,7 @@ def create_comment_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -173,6 +182,8 @@ def comment_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=404, description="없는 게시물")(f)
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -187,6 +198,7 @@ def board_crate_validator(f):
 
         return f(*args, **kwargs)
 
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
 
 
@@ -204,5 +216,6 @@ def board_validator(f):
             return NotFoundBoard()
 
         return f(*args, **kwargs)
-
+    marshal_with(ApiErrorSchema, code=404, description="없는 게시판")(f)
+    marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view

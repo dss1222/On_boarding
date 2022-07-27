@@ -37,14 +37,11 @@ class PostView(FlaskView):
     # 게시글 리스트 조회
     @route('/', methods=['GET'])
     @doc(description='게시글 리스트 조회', summary='게시글 리스트 조회')
+    @use_kwargs(PostListFilterSchema, location='query')
     @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
     @post_list_validator
-    def get_posts_pagination(self, board_id):
-        params = request.args.to_dict()
-
-        page = int(params["page"])
-        size = int(params["size"])
-        order_by = OrderEnum[str(params["orderby"])].value
+    def get_posts_pagination(self, board_id, page, size, orderby):
+        order_by = OrderEnum[str(orderby)].value
 
         posts = Post.objects(board=board_id, is_deleted=False).order_by(order_by)[
                 (page - 1) * size: page * size]

@@ -1,3 +1,3 @@
 class MongoAtlas:
-    secret_id = "test"
-    secret_password = "test1234"
+    secret_id = "1q2w3e4r"
+    secret_password = "1q2w3e4r"
