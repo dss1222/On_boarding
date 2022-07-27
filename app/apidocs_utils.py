@@ -7,6 +7,7 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from typing import Optional
 
+
 class ApiDocConverter(Converter):
     def get_operation(self, rule, view, parent=None):
         from flask_apispec.utils import resolve_annotations, merge_recursive
@@ -40,7 +41,6 @@ class ApiDocConverter(Converter):
 
     def get_request_body(self, view, parent=None):
         schema, options, locations = self._parse_args_annotation(view, parent)
-        print(schema, options, locations)
         converter = self._resolve_converter(schema)
 
         if schema is None:
