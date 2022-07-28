@@ -14,7 +14,6 @@ class BoardView(FlaskView):
     @login_required
     @use_kwargs(BoardCreateSchema())
     @marshal_with(SuccessSchema(), code=200, description="success")
-    @marshal_with(ApiErrorSchema(), code=422, description="validation error")
     @marshal_with(ApiErrorSchema(), code=500, description="SERVER_ERROR")
     @board_crate_validator
     def create_board(self, board=None):
