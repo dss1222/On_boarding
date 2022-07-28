@@ -29,8 +29,8 @@ class UserView(FlaskView):
     @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
     @user_validator
-    def login(self, user=None):
-        return UserService.user_login(user)
+    def login(self, username, password):
+        return UserService.user_login(username, password)
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
