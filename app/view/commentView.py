@@ -3,7 +3,8 @@ from flask_apispec import use_kwargs, doc
 
 from app.serializers.commentSchema import CommentListSchema, ReCommentCreateSchema
 from app.utils.validator import *
-from bson import ObjectId
+
+from app.service.commentService import CommentService
 
 
 class CommentView(FlaskView):
@@ -18,16 +19,7 @@ class CommentView(FlaskView):
     @create_comment_validator
     @post_validator
     def create_comment(self, post_id, board_id, comment):
-        post = Post.objects(id=post_id).get()
-        comment.user = g.user_id
-        comment.post = post
-
-        comment.save()
-
-        post.update(push__comments=str(comment))
-        post.update(inc__comments_cnt=1)
-
-        return SuccessDto()
+        return CommentService.comment_create(post_id, comment)
 
     # 대댓글
     @route('/<string:comment_id>/recomment', methods=['POST'])
@@ -37,12 +29,7 @@ class CommentView(FlaskView):
     @login_required
     @comment_validator
     def create_recomment(self, board_id, post_id, comment_id, re_comment):
-        re_comment.user = g.user_id
-        re_comment.post = ObjectId(post_id)
-        re_comment.recomment = ObjectId(comment_id)
-        re_comment.save()
-
-        return SuccessDto()
+        return CommentService.comment_re_create(board_id, post_id, comment_id)
 
     # 좋아요 기능
     @route('/<string:comment_id>/likes', methods=['POST'])
@@ -51,9 +38,7 @@ class CommentView(FlaskView):
     @login_required
     @comment_validator
     def like_comment(self, comment_id, board_id, post_id):
-        comment = Comment.objects(id=comment_id).get()
-        comment.like(g.user_id)
-        return SuccessDto()
+        return CommentService.comment_like(comment_id)
 
     # 좋아요 취소
     @route('/<string:comment_id>/unlikes', methods=['POST'])
@@ -62,9 +47,7 @@ class CommentView(FlaskView):
     @login_required
     @comment_validator
     def unlike_comment(self, comment_id, board_id, post_id):
-        comment = Comment.objects(id=comment_id).get()
-        comment.cancel_like(g.user_id)
-        return SuccessDto()
+        return CommentService.comment_unlike(comment_id)
 
     # 댓글 조회
     @route('/order/created', methods=['GET'])
@@ -73,5 +56,4 @@ class CommentView(FlaskView):
     @login_required
     @post_validator
     def get_comments_created(self, post_id):
-        comments = Comment.objects(post=post_id).order_by('-created_at').limit(10)
-        return comments, 200
+        return CommentService.comment_get_list(post_id)
