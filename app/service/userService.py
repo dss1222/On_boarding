@@ -1,6 +1,6 @@
 import jwt
 
-from flask import request, g, current_app
+from flask import  g, current_app
 from bson.json_util import dumps
 
 from app.utils.ApiErrorSchema import *
@@ -18,11 +18,13 @@ class UserService:
             return SuccessDto(), 200
 
     @classmethod
-    def user_login(cls, user):
-        if not user:
+    def user_login(cls, username, password):
+        try:
+            user = User.objects(username=username).get()
+        except DoesNotExist as err:
             return NotUser()
 
-        if not user.check_password(request.json["password"]):
+        if not user.check_password(password):
             return NotPassword()
 
         token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
