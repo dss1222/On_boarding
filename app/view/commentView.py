@@ -29,7 +29,7 @@ class CommentView(FlaskView):
     @login_required
     @comment_validator
     def create_recomment(self, board_id, post_id, comment_id, re_comment):
-        return CommentService.comment_re_create(board_id, post_id, comment_id)
+        return CommentService.comment_re_create(post_id, comment_id, re_comment)
 
     # 좋아요 기능
     @route('/<string:comment_id>/likes', methods=['POST'])

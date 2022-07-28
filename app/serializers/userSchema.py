@@ -1,6 +1,6 @@
 import bcrypt
 
-from marshmallow import fields, Schema, post_load, pre_load
+from marshmallow import fields, Schema, post_load
 from app.Model import User
 
 
@@ -20,13 +20,6 @@ class UserSchema(Schema):
     username = fields.Str(required=True, unique=True)
     password = fields.Str(required=True)
     created_at = fields.DateTime()
-
-    @post_load()
-    def check_user(self, data, **kwargs):
-        user = User.objects(username=data["username"])
-        if not user:
-            return False
-        return user[0]
 
 
 class UserUpdateSchema(Schema):

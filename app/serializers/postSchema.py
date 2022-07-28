@@ -64,13 +64,3 @@ class PostUpdateSchema(Schema):
     @post_load()
     def update_post(self, data, **kwargs):
         return {'post': Post(**data)}
-
-# paginate 구현 못함
-# class PostListInBoardSchema(PostListSchema):
-#     class Meta:
-#         fields = ['id', 'user', 'title', 'likes_count', 'comments_count', "created_at"]
-#
-#
-# class PaginatedPostsInBoardSchema(Schema):
-#     total = fields.Integer()
-#     items = fields.Nested(PostListInBoardSchema, many=True)
