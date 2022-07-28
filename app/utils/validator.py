@@ -7,6 +7,7 @@ from functools import wraps
 from flask import request, g, current_app
 from bson.json_util import loads
 from marshmallow import ValidationError
+from funcy import partial
 
 from app.serializers.userSchema import UserSchema, UserCreateSchema
 from app.serializers.postSchema import PostCreateSchema
@@ -216,6 +217,10 @@ def board_validator(f):
             return NotFoundBoard()
 
         return f(*args, **kwargs)
+
     marshal_with(ApiErrorSchema, code=404, description="없는 게시판")(f)
     marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")(f)
     return decorated_view
+
+
+marshal_empty = partial(marshal_with, Schema)
