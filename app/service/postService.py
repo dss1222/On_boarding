@@ -1,13 +1,14 @@
 import marshmallow
 from bson import ObjectId
 
-from app.utils.validator import *
+from app.service.validator import *
 from app.utils.enumOrder import OrderEnum
 
 
 class PostService:
     @classmethod
-    def post_create(cls, board_id, post):
+    def create(cls, board_id, title, content, tag):
+        post = Post(title=title, content=content, tag=tag)
         post.board = ObjectId(board_id)
         post.user = g.user_id
         post.save()
@@ -15,12 +16,12 @@ class PostService:
         return SuccessDto()
 
     @classmethod
-    def post_get_detail(cls, post_id, board_id):
+    def get_detail(cls, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
         return post, 200
 
     @classmethod
-    def post_get_post_list(cls, board_id, page, size, orderby):
+    def get_posts(cls, board_id, page, size, orderby):
         order_by = OrderEnum[str(orderby)].value
 
         posts = Post.objects(board=board_id, is_deleted=False).order_by(order_by)[
@@ -29,17 +30,17 @@ class PostService:
         return posts, 200
 
     @classmethod
-    def post_update(cls, post_id, board_id, post):
+    def post_update(cls, post_id, title, content, tag):
         try:
-            Post.objects(id=post_id, user=g.user_id, is_deleted=False).update(**request.json)
+            Post.objects(id=post_id, user=g.user_id, is_deleted=False).update(title=title,content=content,tag=tag)
 
             return SuccessDto()
         except marshmallow.exceptions.ValidationError as err:
             return ApiError(message=err.messages), 422
 
     @classmethod
-    def post_delete(cls, post_id, board_id):
-        post = Post.objects(board=board_id, id=post_id).get()
+    def delete(cls, post_id):
+        post = Post.objects(id=post_id).get()
 
         comment_list = Comment.objects(post=post_id, is_deleted=False)
 
@@ -50,18 +51,18 @@ class PostService:
         return SuccessDto()
 
     @classmethod
-    def post_like(cls, board_id, post_id):
-        post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
+    def like(cls, post_id):
+        post = Post.objects(id=post_id, is_deleted=False).get()
         post.like(g.user_id)
         return SuccessDto()
 
     @classmethod
-    def post_unlike(cls, board_id, post_id):
-        post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
+    def unlike(cls, post_id):
+        post = Post.objects(id=post_id, is_deleted=False).get()
         post.cancel_like(g.user_id)
         return SuccessDto()
 
     @classmethod
-    def post_search(cls, board_id, search):
+    def search(cls, board_id, search):
         posts = Post.objects(tag__contains=str(search), is_deleted=False)
         return posts, 200

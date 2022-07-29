@@ -11,10 +11,6 @@ class PostCreateSchema(Schema):
     content = fields.Str(required=True)
     tag = fields.Str()
 
-    @post_load()
-    def create_post(self, data, **kwargs):
-        return {'post': Post(**data)}
-
 
 class PostDetailSchema(Schema):
     id = fields.Str()
@@ -47,20 +43,8 @@ class PostListFilterSchema(Schema):
     size = fields.Int()
     orderby = fields.Str()
 
-    @post_load()
-    def list_filter(self, data, **kwargs):
-        return {
-            'page': data['page'],
-            'size': data['size'],
-            'orderby': data['orderby']
-        }
-
 
 class PostUpdateSchema(Schema):
     title = fields.Str()
     content = fields.Str()
     tag = fields.Str()
-
-    @post_load()
-    def update_post(self, data, **kwargs):
-        return {'post': Post(**data)}

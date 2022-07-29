@@ -4,12 +4,7 @@ from app.Model import *
 
 
 class BoardCreateSchema(Schema):
-    name = fields.String(required=True)
-
-    @post_load()
-    def create_board(self, data, **kwargs):
-        board = Board(**data)
-        return board
+    name = fields.Str(required=True)
 
 
 class BoardSchema(Schema):

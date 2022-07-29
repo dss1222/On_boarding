@@ -1,8 +1,8 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, doc
 
-from app.serializers.commentSchema import CommentListSchema, ReCommentCreateSchema
-from app.utils.validator import *
+from app.serializers.commentSchema import CommentCreateSchema,CommentListSchema, ReCommentCreateSchema
+from app.service.validator import *
 
 from app.service.commentService import CommentService
 
@@ -16,10 +16,9 @@ class CommentView(FlaskView):
     @marshal_with(SuccessSchema, code=200, description="성공")
     @use_kwargs(CommentCreateSchema())
     @login_required
-    @create_comment_validator
     @post_validator
-    def create_comment(self, post_id, board_id, comment):
-        return CommentService.comment_create(post_id, comment)
+    def create_comment(self, post_id, board_id, content):
+        return CommentService.comment_create(post_id, content)
 
     # 대댓글
     @route('/<string:comment_id>/recomment', methods=['POST'])
@@ -28,8 +27,8 @@ class CommentView(FlaskView):
     @use_kwargs(ReCommentCreateSchema())
     @login_required
     @comment_validator
-    def create_recomment(self, board_id, post_id, comment_id, re_comment):
-        return CommentService.comment_re_create(post_id, comment_id, re_comment)
+    def create_recomment(self, board_id, post_id, comment_id, content):
+        return CommentService.comment_re_create(post_id, comment_id, content)
 
     # 좋아요 기능
     @route('/<string:comment_id>/likes', methods=['POST'])
