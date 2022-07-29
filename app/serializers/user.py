@@ -1,18 +1,9 @@
-import bcrypt
-
-from marshmallow import fields, Schema, post_load
-from app.Model import User
+from marshmallow import fields, Schema
 
 
 class UserCreateSchema(Schema):
     username = fields.String(required=True, unique=True)
     password = fields.String(required=True, load_only=True)
-
-    @post_load()
-    def create_user(self, data, **kwargs):
-        data["password"] = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
-        user = User(username=data['username'], password=data['password'])
-        return user
 
 
 class UserSchema(Schema):

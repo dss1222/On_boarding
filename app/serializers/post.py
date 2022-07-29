@@ -1,19 +1,15 @@
 from marshmallow import fields, Schema, post_load
 from app.Model import Post, Comment
 
-from app.serializers.userSchema import UserSchemaName
-from app.serializers.commentSchema import CommentListSchema
-from app.serializers.boardSchema import BoardSchema
+from app.serializers.user import UserSchemaName
+from app.serializers.comment import CommentListSchema
+from app.serializers.board import BoardSchema
 
 
 class PostCreateSchema(Schema):
     title = fields.Str(required=True)
     content = fields.Str(required=True)
     tag = fields.Str()
-
-    @post_load()
-    def create_post(self, data, **kwargs):
-        return {'post': Post(**data)}
 
 
 class PostDetailSchema(Schema):
@@ -47,20 +43,8 @@ class PostListFilterSchema(Schema):
     size = fields.Int()
     orderby = fields.Str()
 
-    @post_load()
-    def list_filter(self, data, **kwargs):
-        return {
-            'page': data['page'],
-            'size': data['size'],
-            'orderby': data['orderby']
-        }
-
 
 class PostUpdateSchema(Schema):
     title = fields.Str()
     content = fields.Str()
     tag = fields.Str()
-
-    @post_load()
-    def update_post(self, data, **kwargs):
-        return {'post': Post(**data)}
