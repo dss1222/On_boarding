@@ -15,7 +15,7 @@ class PostService:
 
     @classmethod
     def get_detail(cls, post_id, board_id):
-        post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
+        post = Post.objects().get(board=board_id, id=post_id, is_deleted=False)
         return post, 200
 
     @classmethod
@@ -33,7 +33,7 @@ class PostService:
 
     @classmethod
     def delete(cls, post_id):
-        post = Post.objects(id=post_id).get()
+        post = Post.objects().get(id=post_id)
 
         comment_list = Comment.objects(post=post_id, is_deleted=False)
 
@@ -44,12 +44,12 @@ class PostService:
 
     @classmethod
     def like(cls, post_id):
-        post = Post.objects(id=post_id, is_deleted=False).get()
+        post = Post.objects().get(id=post_id, is_deleted=False)
         post.like(g.user_id)
 
     @classmethod
     def unlike(cls, post_id):
-        post = Post.objects(id=post_id, is_deleted=False).get()
+        post = Post.objects().get(id=post_id, is_deleted=False)
         post.cancel_like(g.user_id)
 
     @classmethod

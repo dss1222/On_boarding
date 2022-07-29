@@ -6,7 +6,7 @@ class CommentService:
     @classmethod
     def create(cls, post_id, content):
         comment = Comment(content=content)
-        post = Post.objects(id=post_id).get()
+        post = Post.objects().get(id=post_id)
         comment.user = g.user_id
         comment.post = post
 
@@ -25,12 +25,12 @@ class CommentService:
 
     @classmethod
     def like(cls, comment_id):
-        comment = Comment.objects(id=comment_id).get()
+        comment = Comment.objects().get(id=comment_id)
         comment.like(g.user_id)
 
     @classmethod
     def unlike(cls, comment_id):
-        comment = Comment.objects(id=comment_id).get()
+        comment = Comment.objects().get(id=comment_id)
         comment.cancel_like(g.user_id)
 
     @classmethod
