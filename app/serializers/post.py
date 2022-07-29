@@ -1,9 +1,9 @@
 from marshmallow import fields, Schema, post_load
 from app.Model import Post, Comment
 
-from app.serializers.userSchema import UserSchemaName
-from app.serializers.commentSchema import CommentListSchema
-from app.serializers.boardSchema import BoardSchema
+from app.serializers.user import UserSchemaName
+from app.serializers.comment import CommentListSchema
+from app.serializers.board import BoardSchema
 
 
 class PostCreateSchema(Schema):

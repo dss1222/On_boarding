@@ -1,12 +1,12 @@
 import jwt
 import bcrypt
 
-from flask import  g, current_app
+from flask import g, current_app
 from bson.json_util import dumps
 
 from app.utils.ApiErrorSchema import *
 from app.Model import *
-from app.serializers.postSchema import *
+from app.serializers.post import *
 
 
 class UserService:

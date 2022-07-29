@@ -1,12 +1,12 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, marshal_with, doc
 
-from app.serializers.userSchema import UserCreateSchema, UserSchema, UserUpdateSchema
+from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.service.validator import login_required
 from app.utils.ApiErrorSchema import *
-from app.serializers.postSchema import *
-from app.serializers.commentSchema import CommentListSchema
-from app.service.userService import UserService
+from app.serializers.post import *
+from app.serializers.comment import CommentListSchema
+from app.service.user import UserService
 
 
 class UserView(FlaskView):
@@ -18,7 +18,7 @@ class UserView(FlaskView):
     @use_kwargs(UserCreateSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
-    def post(self, username, password):
+    def signup(self, username, password):
         result = UserService.signup(username, password)
         if result == 201:
             return "", 201
@@ -43,7 +43,6 @@ class UserView(FlaskView):
     @use_kwargs(UserUpdateSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
-    @marshal_with(ApiErrorSchema, code=422, description="입력값이 잘못됨")
     @login_required
     def update(self, username=None):
         result = UserService.user_update(username)

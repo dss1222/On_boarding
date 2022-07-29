@@ -13,8 +13,6 @@ class PostService:
         post.user = g.user_id
         post.save()
 
-        return SuccessDto()
-
     @classmethod
     def get_detail(cls, post_id, board_id):
         post = Post.objects(board=board_id, id=post_id, is_deleted=False).get()
@@ -31,12 +29,7 @@ class PostService:
 
     @classmethod
     def post_update(cls, post_id, title, content, tag):
-        try:
-            Post.objects(id=post_id, user=g.user_id, is_deleted=False).update(title=title,content=content,tag=tag)
-
-            return SuccessDto()
-        except marshmallow.exceptions.ValidationError as err:
-            return ApiError(message=err.messages), 422
+        Post.objects(id=post_id, user=g.user_id, is_deleted=False).update(title=title, content=content, tag=tag)
 
     @classmethod
     def delete(cls, post_id):
@@ -48,19 +41,16 @@ class PostService:
             comment.soft_delete()
 
         post.soft_delete()
-        return SuccessDto()
 
     @classmethod
     def like(cls, post_id):
         post = Post.objects(id=post_id, is_deleted=False).get()
         post.like(g.user_id)
-        return SuccessDto()
 
     @classmethod
     def unlike(cls, post_id):
         post = Post.objects(id=post_id, is_deleted=False).get()
         post.cancel_like(g.user_id)
-        return SuccessDto()
 
     @classmethod
     def search(cls, board_id, search):

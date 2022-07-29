@@ -1,10 +1,10 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, doc
 
-from app.serializers.postSchema import *
+from app.serializers.post import *
 from app.service.validator import *
 
-from app.service.postService import PostService
+from app.service.post import PostService
 
 
 class PostView(FlaskView):
@@ -14,9 +14,10 @@ class PostView(FlaskView):
     @route('', methods=['POST'])
     @doc(description='게시글 작성', summary='게시글 작성')
     @use_kwargs(PostCreateSchema())
-    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(SuccessSchema, code=201, description="성공")
     def create(self, board_id, title, content, tag):
-        return PostService.create(board_id, title, content, tag)
+        PostService.create(board_id, title, content, tag)
+        return "", 201
 
     # 게시글 상세조회 1개
     @route('/<string:post_id>', methods=['GET'])
@@ -38,23 +39,25 @@ class PostView(FlaskView):
     @route('/<string:post_id>', methods=['PATCH'])
     @doc(description='게시글 수정', summary='게시글 수정')
     @use_kwargs(PostUpdateSchema())
-    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(SuccessSchema, code=201, description="성공")
     @post_user_validator
     def update(self, post_id, board_id, title, content, tag):
-        return PostService.post_update(post_id, title, content, tag)
+        PostService.post_update(post_id, title, content, tag)
+        return "", 201
 
     # 게시글 삭제
     @route('/<string:post_id>', methods=['DELETE'])
     @doc(description='게시글 삭제', summary='게시글 삭제')
-    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(SuccessSchema, code=201, description="성공")
     @post_user_validator
     def delete(self, post_id, board_id):
-        return PostService.delete(post_id)
+        PostService.delete(post_id)
+        return "", 201
 
     # 좋아요 기능
     @route('/<string:post_id>/likes', methods=['POST'])
     @doc(summary="게시물 좋아요", description="게시물 좋아요")
-    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(SuccessSchema, code=201, description="성공")
     @post_validator
     def like(self, board_id, post_id):
         return PostService.like(post_id)
@@ -62,10 +65,11 @@ class PostView(FlaskView):
     # 좋아요 취소
     @route('/<string:post_id>/unlikes', methods=['POST'])
     @doc(summary="게시물 좋아요 취소", description="게시물 좋아요 취소")
-    @marshal_with(SuccessSchema, code=200, description="성공")
+    @marshal_with(SuccessSchema, code=201, description="성공")
     @post_validator
     def unlike(self, board_id, post_id):
-        return PostService.unlike(post_id)
+        PostService.unlike(post_id)
+        return "", 201
 
     # 태그 검색 기능
     @route('/search/<search>', methods=['GET'])

@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.view.userView import UserView
-from app.view.postView import PostView
-from app.view.commentView import CommentView
-from app.view.boardView import BoardView
+from app.view.user import UserView
+from app.view.post import PostView
+from app.view.comment import CommentView
+from app.view.board import BoardView
 
 api = Blueprint("api", __name__)
 

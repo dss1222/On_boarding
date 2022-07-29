@@ -1,7 +1,4 @@
-import bcrypt
-
-from marshmallow import fields, Schema, post_load
-from app.Model import User
+from marshmallow import fields, Schema
 
 
 class UserCreateSchema(Schema):
