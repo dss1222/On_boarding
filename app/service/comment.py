@@ -36,4 +36,6 @@ class CommentService:
     @classmethod
     def get_comments(cls, post_id):
         comments = Comment.objects(post=post_id).order_by('-created_at').limit(10)
+
         return comments, 200
+

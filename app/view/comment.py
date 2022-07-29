@@ -21,17 +21,6 @@ class CommentView(FlaskView):
         CommentService.create(post_id, content)
         return "", 201
 
-    # 대댓글
-    @route('/<string:comment_id>/recomment', methods=['POST'])
-    @doc(description='reComment 작성', summary='reComment 작성')
-    @marshal_with(SuccessSchema, code=201, description="성공")
-    @use_kwargs(ReCommentCreateSchema())
-    @login_required
-    @comment_validator
-    def create_recomment(self, board_id, post_id, comment_id, content):
-        CommentService.comment_re_create(post_id, comment_id, content)
-        return "", 201
-
     # 좋아요 기능
     @route('/<string:comment_id>/likes', methods=['POST'])
     @doc(summary="댓글 좋아요", description="댓글 좋아요")
@@ -53,7 +42,7 @@ class CommentView(FlaskView):
         return "", 201
 
     # 댓글 조회
-    @route('/order/created', methods=['GET'])
+    @route('', methods=['GET'])
     @doc(summary="게시글 리스트 조회", description="게시글 리스트 조회")
     @marshal_with(CommentListSchema(many=True), code=200, description="댓글 목록 조회")
     @login_required
