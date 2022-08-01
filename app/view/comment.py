@@ -1,7 +1,7 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, doc
 
-from app.serializers.comment import CommentCreateSchema,CommentListSchema, ReCommentCreateSchema
+from app.serializers.comment import CommentCreateSchema, CommentListSchema
 from app.service.validator import *
 
 from app.service.comment import CommentService
@@ -47,5 +47,5 @@ class CommentView(FlaskView):
     @marshal_with(CommentListSchema(many=True), code=200, description="댓글 목록 조회")
     @login_required
     @post_validator
-    def get_comments(self, post_id):
+    def get_comments(self, board_id, post_id):
         return CommentService.get_comments(post_id)

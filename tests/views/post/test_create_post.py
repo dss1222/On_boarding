@@ -40,7 +40,7 @@ class Test_게시글작성:
 
         class Test_정상요청:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_게시글갯수_1개_반환(self, subject):
                 assert Post.objects.count() == 1

@@ -29,4 +29,4 @@ class Describe_BoardView:
 
         def test_return_200(self, subject):
             print(subject)
-            assert subject.status_code == 200
+            assert subject.status_code == 201

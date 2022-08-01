@@ -1,8 +1,8 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, doc
 
-from app.serializers.comment import CommentCreateSchema,CommentListSchema, ReCommentCreateSchema
 from app.service.validator import *
+from app.serializers.recomments import *
 
 from app.service.recomment import ReCommentService
 
