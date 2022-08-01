@@ -2,6 +2,7 @@ from marshmallow import fields, Schema, post_load
 from app.Model import Comment
 
 from app.serializers.user import UserSchemaName
+from app.serializers.recomments import *
 
 
 class CommentCreateSchema(Schema):
@@ -19,9 +20,16 @@ class CommentListSchema(Schema):
     content = fields.Str()
     user = fields.Nested(UserSchemaName)
     likes_cnt = fields.Int()
-    recomments = fields.Method('get_comments')
-    comment = fields.Nested(CommentSchema(many=True))
+    # recomments = fields.Method('get_comments')
 
     def get_comments(self, obj):
         comment_list = CommentListSchema(many=True).dump(Comment.objects(recomment=obj.id))
         return comment_list
+
+
+class CommentDetailSchema(Schema):
+    id = fields.Str()
+    user = fields.Nested(UserSchemaName)
+    content = fields.Str()
+    likes_cnt = fields.Int()
+    recomment = fields.Nested(ReCommentDetailSchema(many=True))

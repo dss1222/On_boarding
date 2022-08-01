@@ -43,7 +43,7 @@ class Test_댓글작성:
 
         class Test_댓글_생성:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_댓글갯수_1개_반환(self, subject):
                 assert Comment.objects.count() == 1
@@ -81,11 +81,11 @@ class Test_댓글작성:
 
             @pytest.fixture(scope="function")
             def subject(self, client, headers, form, url_get, comment):
-                url = url_get + str(comment.id) + "/recomment"
+                url = url_get + str(comment.id) + "/recomments"
                 return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_내용_검증(self, subject):
                 comments = Comment.objects()[1].content
