@@ -1,9 +1,8 @@
-import factory
 import bcrypt
 from factory.mongoengine import MongoEngineFactory
 
 from factory import fuzzy
-from app.Model import User
+from app.models.Model import User
 
 
 class UserFactory(MongoEngineFactory):

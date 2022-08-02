@@ -5,9 +5,8 @@ from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 from tests.factories.comment import CommentFactory
-from tests.factories.recomment import ReCommentFactory
 
-from app.Model import *
+from app.models.Model import *
 
 
 class Test_댓글작성:

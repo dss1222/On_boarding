@@ -1,11 +1,9 @@
 import pytest
-import json
 
 from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 
-from app.Model import *
 
 class Test_마이페이지:
     @pytest.fixture()

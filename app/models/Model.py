@@ -8,7 +8,7 @@ from mongoengine import StringField, DateTimeField
 
 class User(Document):
     username = StringField(required=True, unique=True)
-    password = StringField(required=True)
+    password = StringField()
     created_at = DateTimeField(default=datetime.datetime.now())
 
     def check_password(self, password):

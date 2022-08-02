@@ -7,7 +7,7 @@ from flask import request, g, current_app
 from bson.json_util import loads
 
 from app.utils.ApiErrorSchema import *
-from app.Model import *
+from app.models.Model import *
 
 
 # 로그인 인증 데코레이터
@@ -27,8 +27,8 @@ def login_required(f):
 
         g.user_id = loads(payload['user_id'])  # 토큰에 있는 내 정보
 
-        if not User.objects(id=g.user_id):
-            return ApiError(message="유효하지 않은 토큰입니다"), 403
+        # if not User.objects(id=g.user_id):
+        #     return ApiError(message="유효하지 않은 토큰입니다"), 403
 
         g.username = loads(payload['username'])
 
