@@ -5,6 +5,8 @@ from app.view.user import UserView
 from app.view.post import PostView
 from app.view.comment import CommentView
 from app.view.board import BoardView
+from app.view.recomment import ReCommentView
+from app.view.mypage import MyPageView
 
 api = Blueprint("api", __name__)
 
@@ -23,6 +25,8 @@ def register_api(app):
     PostView.register(api, route_base='/boards/<string:board_id>/posts', trailing_slash=False)
     CommentView.register(api, route_base='/boards/<string:board_id>/posts/<string:post_id>/comments', trailing_slash=False)
     BoardView.register(api, route_base='/boards', trailing_slash=False)
+    ReCommentView.register(api, route_base='/boards/<string:board_id>/posts/<string:post_id>/comments/<string:comment_id>/recomments', trailing_slash=False)
+    MyPageView.register(api, route_base='/users/mypage', trailing_slash=False)
 
     register_swagger(api)
     app.register_blueprint(api)

@@ -5,6 +5,7 @@ from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 from tests.factories.comment import CommentFactory
+from tests.factories.recomment import ReCommentFactory
 
 from app.Model import *
 
@@ -43,7 +44,7 @@ class Test_댓글작성:
 
         class Test_댓글_생성:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_댓글갯수_1개_반환(self, subject):
                 assert Comment.objects.count() == 1
@@ -81,19 +82,19 @@ class Test_댓글작성:
 
             @pytest.fixture(scope="function")
             def subject(self, client, headers, form, url_get, comment):
-                url = url_get + str(comment.id) + "/recomment"
+                url = url_get + str(comment.id) + "/recomments"
                 return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_내용_검증(self, subject):
-                comments = Comment.objects()[1].content
-                assert comments == "test_recontent"
+                recomments = ReComment.objects()[0].content
+                assert recomments == "test_recontent"
 
             def test_댓글총갯수_2개(self, subject):
                 comments_cnt = Comment.objects.count()
-                assert comments_cnt == 2
+                assert comments_cnt == 1
 
         class Test_댓글_생성_오류:
             @pytest.fixture()

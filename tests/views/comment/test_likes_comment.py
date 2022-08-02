@@ -47,7 +47,7 @@ class Test_댓글_좋아요:
         class Test_좋아요:
             def test_200_반환(self, subject):
                 print(subject)
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_좋아요갯수_1개_반환(self, subject):
                 comment = Comment.objects.first()
@@ -60,7 +60,7 @@ class Test_댓글_좋아요:
                     return client.post(url, headers=headers, content_type="application/json")
 
                 def test_200_반환(self, subject2):
-                    assert subject2.status_code == 200
+                    assert subject2.status_code == 201
 
                 def test_좋아요갯수_0개_반환(self, subject, subject2):
                     comment = Comment.objects.first()

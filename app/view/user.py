@@ -4,8 +4,6 @@ from flask_apispec import use_kwargs, marshal_with, doc
 from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.service.validator import login_required
 from app.utils.ApiErrorSchema import *
-from app.serializers.post import *
-from app.serializers.comment import CommentListSchema
 from app.service.user import UserService
 
 
@@ -50,27 +48,3 @@ class UserView(FlaskView):
             return "", 201
         elif result == 409:
             return NotCreateUsername()
-
-    # 내가 쓴글 조회
-    @route('/mypage/posts', methods=['GET'])
-    @doc(description='내가 쓴글 조회', summary='내가 쓴글 조회')
-    @marshal_with(PostListSchema(many=True), code=200, description="내가 쓴글 조회")
-    @login_required
-    def get_myposts(self):
-        return UserService.get_myposts()
-
-    # 내가 작성한 코멘트 조회
-    @route('/mypage/comments', methods=['GET'])
-    @doc(description='내가 쓴 댓글 조회', summary='내가 쓴 댓글 조회')
-    @marshal_with(CommentListSchema(many=True), code=200, description="내가 쓴글 조회")
-    @login_required
-    def get_mycomments(self):
-        return UserService.get_mycomments()
-
-    # 내가 좋아요한 글 조회
-    @route('/mypage/posts/likes', methods=['GET'])
-    @doc(description='내가 좋아요 한 글 조회', summary='내가 좋아요 한 글 조회')
-    @marshal_with(PostListSchema(many=True), code=200, description="내가 좋아요 한 글 조회")
-    @login_required
-    def get_myposts_likes(self):
-        return UserService.get_mylikes()
