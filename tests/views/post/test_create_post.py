@@ -5,7 +5,7 @@ from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 
-from app.Model import *
+from app.models.Model import *
 
 class Test_게시글작성:
     @pytest.fixture()

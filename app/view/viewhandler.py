@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.view.user import UserView
@@ -7,6 +7,7 @@ from app.view.comment import CommentView
 from app.view.board import BoardView
 from app.view.recomment import ReCommentView
 from app.view.mypage import MyPageView
+from app.view.oatuh import *
 
 api = Blueprint("api", __name__)
 
@@ -27,6 +28,7 @@ def register_api(app):
     BoardView.register(api, route_base='/boards', trailing_slash=False)
     ReCommentView.register(api, route_base='/boards/<string:board_id>/posts/<string:post_id>/comments/<string:comment_id>/recomments', trailing_slash=False)
     MyPageView.register(api, route_base='/users/mypage', trailing_slash=False)
+    OatuhView.register(api, route_base='/', trailing_slash=False)
 
     register_swagger(api)
     app.register_blueprint(api)

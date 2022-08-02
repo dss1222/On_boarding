@@ -21,7 +21,7 @@ class MyPageView(FlaskView):
     # 내가 작성한 코멘트 조회
     @route('/comments', methods=['GET'])
     @doc(description='내가 쓴 댓글 조회', summary='내가 쓴 댓글 조회')
-    @marshal_with(CommentDetailSchema(many=True), code=200, description="내가 쓴글 조회")
+    @marshal_with(CommentDetailSchema(many=True), code=200, description="내가 쓴 댓글 조회")
     @login_required
     def get_mycomments(self):
         return MyPageService.get_mycomments()

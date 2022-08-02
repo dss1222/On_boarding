@@ -1,9 +1,8 @@
-import bcrypt
 import pytest
 import json
 
 from tests.factories.user import UserFactory
-from app.Model import *
+from app.models.Model import *
 
 
 class Test_user:
