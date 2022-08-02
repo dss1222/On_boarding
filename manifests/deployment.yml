@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "myakscluster-5a31"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "myakscluster-5a31"
+  template:
+    metadata:
+      labels:
+        app: "myakscluster-5a31"
+    spec:
+      containers:
+        - name: "myakscluster-5a31"
+          image: "dongseoktest.azurecr.io/myakscluster"
+          ports:
+          - containerPort: 5000

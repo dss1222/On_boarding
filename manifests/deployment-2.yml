@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "testk8s-f707"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "testk8s-f707"
+  template:
+    metadata:
+      labels:
+        app: "testk8s-f707"
+    spec:
+      containers:
+        - name: "testk8s-f707"
+          image: "dongseoktest.azurecr.io/testk8s"
+          ports:
+          - containerPort: 5000
