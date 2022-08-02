@@ -47,7 +47,7 @@ def post_validator(f):
             return WrongId()
 
         if not Post.objects(id=post_id, is_deleted=False):
-            return NotFoundPost()
+            return ApiError(message="없는 게시글 입니다"), 404
 
         return f(*args, **kwargs)
 
@@ -62,7 +62,7 @@ def post_user_validator(f):
     def decorated_function(*args, **kwargs):
         post = Post.objects(id=kwargs["post_id"])
         if (not post) or post.get().is_deleted:
-            return NotFoundPost()
+            return ApiError(message="없는 게시글 입니다"), 404
         try:
             post.get().user.id != g.user_id
         except mongoengine.errors.DoesNotExist:
@@ -76,7 +76,7 @@ def post_user_validator(f):
 
 def comment_validator(f):
     @wraps(f)
-    @marshal_with(ApiErrorSchema, code=404, description="없는 게시물")
+    @marshal_with(ApiErrorSchema, code=404, description="없는 댓글")
     @marshal_with(ApiErrorSchema, code=422, description="잘못된 요청")
     def decorated_view(*args, **kwargs):
         comment_id = kwargs['comment_id']
@@ -85,7 +85,7 @@ def comment_validator(f):
             return WrongId()
 
         if not Comment.objects(id=comment_id, is_deleted=False):
-            return NotFoundComment()
+            return ApiError(message="없는 댓글입니다"), 404
 
         return f(*args, **kwargs)
 
@@ -105,7 +105,7 @@ def board_validator(f):
             return WrongId()
 
         if not Board.objects(id=board_id):
-            return NotFoundBoard()
+            return ApiError(message="없는 게시판 입니다"), 404
 
         return f(*args, **kwargs)
 

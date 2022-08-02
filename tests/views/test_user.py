@@ -25,7 +25,7 @@ class Test_user:
 
         class Test_정상요청:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_유저수_증가(self, subject):
                 total_user_cnt = User.objects.count()
@@ -132,7 +132,7 @@ class Test_user:
 
         class Test_정상요청:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
         class Test_중복된닉네임일경우:
             @pytest.fixture()

@@ -14,7 +14,7 @@ class BoardView(FlaskView):
     @login_required
     @use_kwargs(BoardCreateSchema())
     @marshal_with(SuccessSchema(), code=201, description="성")
-    def create_board(self, name):
+    def create(self, name):
         board = Board(name=name)
         board.save()
         return "", 201

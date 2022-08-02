@@ -69,14 +69,14 @@ class Test_게시글조회:
                 body = subject.json
                 assert len(body) == 3
 
-            class Test_페이징조회_에러:
-                @pytest.fixture()
-                def subject(self, headers, client, board, post_list):
-                    url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=create"
-                    return client.get(url, headers=headers, content_type="application/json")
-
-                def test_400_반환(self, subject):
-                    assert subject.status_code == 422
+            # class Test_페이징조회_에러:
+            #     @pytest.fixture()
+            #     def subject(self, headers, client, board, post_list):
+            #         url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=create"
+            #         return client.get(url, headers=headers, content_type="application/json")
+            #
+            #     def test_400_반환(self, subject):
+            #         assert subject.status_code == 422
 
 
     # 검색기능

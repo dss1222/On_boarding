@@ -23,7 +23,7 @@ class UserService:
     @classmethod
     def login(cls, username, password):
         try:
-            user = User.objects(username=username).get()
+            user = User.objects().get(username=username)
         except DoesNotExist as err:
             return 401
 
@@ -42,18 +42,3 @@ class UserService:
             return 201
         else:
             return 409
-
-    @classmethod
-    def get_myposts(cls):
-        posts = Post.objects(user=g.user_id, is_deleted=False)
-        return posts, 200
-
-    @classmethod
-    def get_mycomments(cls):
-        comments = Comment.objects(user=g.user_id, is_deleted=False)
-        return comments, 200
-
-    @classmethod
-    def get_mylikes(cls):
-        posts = Post.objects(likes__exact=str(g.user_id), is_deleted=False)
-        return posts, 200

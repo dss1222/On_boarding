@@ -46,18 +46,6 @@ def NotUser():
     return ApiError(message="존재하지 않는 아이디입니다"), 401
 
 
-def NotFoundBoard():
-    return ApiError(message="해당 게시판이 존재하지 않습니다"), 404
-
-
-def NotFoundPost():
-    return ApiError(message="해당 게시글이 존재하지 않습니다"), 404
-
-
-def NotFoundComment():
-    return ApiError(message="해당 댓글이 존재하지 않습니다"), 404
-
-
 def WrongId():
     return ApiError(message="잘못된 id형식입니다"), 404
 

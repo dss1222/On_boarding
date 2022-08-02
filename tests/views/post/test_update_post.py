@@ -49,7 +49,7 @@ class Test_게시글수정:
 
         class Test_정상요청:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_내용_검증(self, subject, form, logged_in_user):
                 post = Post.objects.first()

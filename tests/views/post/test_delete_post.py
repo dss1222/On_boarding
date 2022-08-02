@@ -47,7 +47,7 @@ class Test_게시글_삭제:
                 return client.delete(url_get, headers=headers, content_type="application/json")
 
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 204
 
             def test_게시글갯수_0개_반환(self, subject):
                 post_cnt = Post.objects(is_deleted=False).count()

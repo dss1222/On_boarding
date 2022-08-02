@@ -48,11 +48,11 @@ class PostView(FlaskView):
     # 게시글 삭제
     @route('/<string:post_id>', methods=['DELETE'])
     @doc(description='게시글 삭제', summary='게시글 삭제')
-    @marshal_with(SuccessSchema, code=201, description="성공")
+    @marshal_with(SuccessSchema, code=204, description="성공")
     @post_user_validator
     def delete(self, post_id, board_id):
         PostService.delete(post_id)
-        return "", 201
+        return "", 204
 
     # 좋아요 기능
     @route('/<string:post_id>/likes', methods=['POST'])
@@ -60,7 +60,8 @@ class PostView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @post_validator
     def like(self, board_id, post_id):
-        return PostService.like(post_id)
+        PostService.like(post_id)
+        return "", 201
 
     # 좋아요 취소
     @route('/<string:post_id>/unlikes', methods=['POST'])
