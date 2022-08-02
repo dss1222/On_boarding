@@ -1,5 +1,4 @@
-from marshmallow import fields, Schema, post_load
-from app.Model import Comment
+from marshmallow import fields, Schema
 
 from app.serializers.user import UserSchemaName
 

@@ -1,12 +1,10 @@
 import jwt
 import bcrypt
-
 from flask import g, current_app
 from bson.json_util import dumps
 
 from app.utils.ApiErrorSchema import *
-from app.Model import *
-from app.serializers.post import *
+from app.models.user import User
 
 
 class UserService:
@@ -16,19 +14,20 @@ class UserService:
             return 409
         else:
             hash_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-            user = User(username=username, password=hash_password)
+            user = User(username=username, password=hash_password, type='default')
             user.save()
             return 201
 
     @classmethod
     def login(cls, username, password):
-        try:
+        if not User.objects(username=username):
+            return 401
+        else:
             user = User.objects().get(username=username)
-        except DoesNotExist as err:
-            return 401
 
-        if not user.check_password(password):
-            return 401
+        if user.type == 'default':
+            if not user.check_password(password):
+                return 401
 
         token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
                            current_app.config['SECRET'], current_app.config['ALGORITHM'])

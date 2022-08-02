@@ -37,7 +37,7 @@ class UserView(FlaskView):
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
-    @doc(description='유저 정보 수정', summary='유저 정보 수정')
+    @doc(description='유저 정보 수정', summary='유저 정 수정')
     @use_kwargs(UserUpdateSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
