@@ -12,7 +12,7 @@ class UserView(FlaskView):
 
     # 회원가입
     @route('/signup', methods=['POST'])
-    @doc(description='User 회원가입', summary='User 회원가입')
+    @doc(description='유저 회원가입', summary='유저 회원가입')
     @use_kwargs(UserCreateSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
@@ -25,7 +25,7 @@ class UserView(FlaskView):
 
     # 로그인
     @route('/login', methods=['POST'])
-    @doc(description='User 로그인', summary='User 로그인')
+    @doc(description='유저 로그인', summary='유저 로그인')
     @use_kwargs(UserSchema())
     @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
@@ -37,7 +37,7 @@ class UserView(FlaskView):
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
-    @doc(description='User 정보 수정', summary='Username 수정')
+    @doc(description='유저 정보 수정', summary='유저 정보 수정')
     @use_kwargs(UserUpdateSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")

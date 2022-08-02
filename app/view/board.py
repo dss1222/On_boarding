@@ -7,13 +7,13 @@ from app.utils.ApiErrorSchema import *
 
 
 class BoardView(FlaskView):
-    decorators = (doc(tags=["Boards"]),)
+    decorators = (doc(tags=["Board"]),)
 
     @route('/', methods=['POST'])
-    @doc(description="boards 등록", summary="boards 등록")
+    @doc(description="게시판 등록", summary="게시판 등록")
     @login_required
     @use_kwargs(BoardCreateSchema())
-    @marshal_with(SuccessSchema(), code=201, description="성")
+    @marshal_with(SuccessSchema(), code=201, description="성공")
     def create(self, name):
         board = Board(name=name)
         board.save()

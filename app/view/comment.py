@@ -8,11 +8,11 @@ from app.service.comment import CommentService
 
 
 class CommentView(FlaskView):
-    decorators = (doc(tags=['COMMENT']), login_required)
+    decorators = (doc(tags=['Comment']), login_required)
 
     # 코멘트 작성
     @route('/', methods=['POST'])
-    @doc(description='Comment 작성', summary='Comment 작성')
+    @doc(description='댓글 작성', summary='댓글 작성')
     @marshal_with(SuccessSchema, code=201, description="성공")
     @use_kwargs(CommentCreateSchema())
     @post_validator
@@ -31,7 +31,7 @@ class CommentView(FlaskView):
 
     # 좋아요 취소
     @route('/<string:comment_id>/unlikes', methods=['POST'])
-    @doc(summary="게시물 좋아요 취소", description="댓글 좋아요 취소")
+    @doc(summary="댓글 좋아요 취소", description="댓글 좋아요 취소")
     @marshal_with(SuccessSchema, code=201, description="성공")
     @comment_validator
     def unlike(self, comment_id, board_id, post_id):
@@ -40,8 +40,8 @@ class CommentView(FlaskView):
 
     # 댓글 조회
     @route('', methods=['GET'])
-    @doc(summary="게시글 리스트 조회", description="댓글 리스트 조회")
-    @marshal_with(CommentDetailSchema(many=True), code=200, description="댓글 목록 조회")
+    @doc(summary="댓글 리스트 조회", description="댓글 리스트 조회")
+    @marshal_with(CommentDetailSchema(many=True), code=200, description="댓글 리스트 조회")
     @post_validator
     def get_comments(self, board_id, post_id):
         return CommentService.get_comments(post_id)
