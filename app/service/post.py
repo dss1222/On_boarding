@@ -38,6 +38,9 @@ class PostService:
         comment_list = Comment.objects(post=post_id, is_deleted=False)
 
         for comment in comment_list:
+            recomment_list = ReComment.objects(comment=comment)
+            for recomment in recomment_list:
+                recomment.soft_delete()
             comment.soft_delete()
 
         post.soft_delete()

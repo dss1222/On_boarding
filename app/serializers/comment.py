@@ -15,16 +15,16 @@ class CommentSchema(Schema):
     user = fields.Nested(UserSchemaName)
 
 
-class CommentListSchema(Schema):
-    id = fields.Str()
-    content = fields.Str()
-    user = fields.Nested(UserSchemaName)
-    likes_cnt = fields.Int()
-    # recomments = fields.Method('get_comments')
-
-    def get_comments(self, obj):
-        comment_list = CommentListSchema(many=True).dump(Comment.objects(recomment=obj.id))
-        return comment_list
+# class CommentListSchema(Schema):
+#     id = fields.Str()
+#     content = fields.Str()
+#     user = fields.Nested(UserSchemaName)
+#     likes_cnt = fields.Int()
+#     # recomments = fields.Method('get_comments')
+#
+#     def get_comments(self, obj):
+#         comment_list = CommentListSchema(many=True).dump(Comment.objects(recomment=obj.id))
+#         return comment_list
 
 
 class CommentDetailSchema(Schema):

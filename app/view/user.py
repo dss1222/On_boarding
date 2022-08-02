@@ -4,8 +4,6 @@ from flask_apispec import use_kwargs, marshal_with, doc
 from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.service.validator import login_required
 from app.utils.ApiErrorSchema import *
-from app.serializers.post import *
-from app.serializers.comment import CommentListSchema
 from app.service.user import UserService
 
 

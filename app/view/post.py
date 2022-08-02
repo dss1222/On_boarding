@@ -60,7 +60,8 @@ class PostView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @post_validator
     def like(self, board_id, post_id):
-        return PostService.like(post_id)
+        PostService.like(post_id)
+        return "", 201
 
     # 좋아요 취소
     @route('/<string:post_id>/unlikes', methods=['POST'])

@@ -5,6 +5,7 @@ from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 from tests.factories.comment import CommentFactory
+from tests.factories.recomment import ReCommentFactory
 
 from app.Model import *
 
@@ -88,12 +89,12 @@ class Test_댓글작성:
                 assert subject.status_code == 201
 
             def test_내용_검증(self, subject):
-                comments = Comment.objects()[1].content
-                assert comments == "test_recontent"
+                recomments = ReComment.objects()[0].content
+                assert recomments == "test_recontent"
 
             def test_댓글총갯수_2개(self, subject):
                 comments_cnt = Comment.objects.count()
-                assert comments_cnt == 2
+                assert comments_cnt == 1
 
         class Test_댓글_생성_오류:
             @pytest.fixture()
