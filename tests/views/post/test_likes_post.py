@@ -40,7 +40,7 @@ class Test_게시글좋아요:
 
         class Test_정상요청:
             def test_200_반환(self, subject):
-                assert subject.status_code == 200
+                assert subject.status_code == 201
 
             def test_좋아요갯수_1개반환(self, subject):
                 post = Post.objects.first()

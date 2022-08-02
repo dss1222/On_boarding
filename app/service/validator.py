@@ -21,16 +21,48 @@ def login_required(f):
         try:
             access_token = request.headers.get('Authorization')
             payload = jwt.decode(access_token, current_app.config['SECRET'], current_app.config['ALGORITHM'])
-
+            if payload["type"] != "access":
+                return ApiError(message="액세스 토큰이 아닙니다"), 403
+        except jwt.ExpiredSignatureError:
+            return ApiError(message="토큰의 유효기간이 다 됐습니다"), 403
         except jwt.InvalidTokenError:
             return ApiError(message="유효하지 않은 토큰입니다"), 403
 
         g.user_id = loads(payload['user_id'])  # 토큰에 있는 내 정보
 
-        # if not User.objects(id=g.user_id):
-        #     return ApiError(message="유효하지 않은 토큰입니다"), 403
+        if not User.objects(id=g.user_id):
+            return ApiError(message="유효하지 않은 토큰입니다"), 403
 
         g.username = loads(payload['username'])
+
+        return f(*args, **kwargs)
+
+    marshal_with(ApiErrorSchema, code=403, description="유효하지 않은 토큰입니다")(f)
+    return decorated_function
+
+
+# 토큰 재발급 데코레이터
+def token_refresh_validator(f):
+    @wraps(f)
+    @marshal_with(ApiErrorSchema, code=403, description="유효하지 않은 토큰입니다")
+    def decorated_function(*args, **kwargs):
+
+        if not 'Authorization' in request.headers:
+            return ApiError(message="로그인이 필요합니다"), 403
+        try:
+            access_token = request.headers.get('Authorization')
+            payload = jwt.decode(access_token, current_app.config['SECRET'], current_app.config['ALGORITHM'])
+            if payload["type"] != "refresh":
+                return ApiError(message="리프레쉬 토큰이 아닙니다"), 403
+        except jwt.ExpiredSignatureError:
+            return ApiError(message="토큰의 유효기간이 다 됐습니다"), 403
+        except jwt.InvalidTokenError:
+            return ApiError(message="유효하지 않은 토큰입니다"), 403
+
+        g.user_id = loads(payload['user_id'])  # 토큰에 있는 내 정보
+
+        if not User.objects(id=g.user_id):
+            return ApiError(message="유효하지 않은 토큰입니다"), 403
 
         return f(*args, **kwargs)
 
