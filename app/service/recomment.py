@@ -18,10 +18,3 @@ class ReCommentService:
     def unlike(cls, re_comment_id):
         recomment = ReComment.objects().get(id=re_comment_id)
         recomment.cancel_like(g.user_id)
-    # @classmethod
-    # def create(cls, post_id, comment_id, content):
-    #     re_comment = Comment(content=content)
-    #     re_comment.user = g.user_id
-    #     re_comment.post = ObjectId(post_id)
-    #     re_comment.recomment = ObjectId(comment_id)
-    #     re_comment.save()
