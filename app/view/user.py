@@ -2,7 +2,7 @@ from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, marshal_with, doc
 
 from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
-from app.service.validator import login_required
+from app.service.validator import login_required, token_refresh_validator
 from app.utils.ApiErrorSchema import *
 from app.service.user import UserService
 
@@ -27,7 +27,7 @@ class UserView(FlaskView):
     @route('/login', methods=['POST'])
     @doc(description='유저 로그인', summary='유저 로그인')
     @use_kwargs(UserSchema())
-    @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
+    @marshal_with(AuthAllTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
     def login(self, username, password):
         result = UserService.login(username, password)
@@ -48,3 +48,11 @@ class UserView(FlaskView):
             return "", 201
         elif result == 409:
             return NotCreateUsername()
+
+    @route('/refresh', methods=['GET'])
+    @doc(description='토큰 재발급', summary='토큰 재발급')
+    @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
+    @token_refresh_validator
+    def refresh(self):
+        result = UserService.refresh()
+        return result

@@ -1,6 +1,8 @@
+import datetime
+
 import jwt
 import bcrypt
-from flask import g, current_app
+from flask import g, current_app, request
 from bson.json_util import dumps
 
 from app.utils.ApiErrorSchema import *
@@ -28,10 +30,12 @@ class UserService:
         if user.type == 'default':
             if not user.check_password(password):
                 return 401
+        return AuthToken.create(user=user)
 
-        token = jwt.encode({"user_id": dumps(user.id), "username": dumps(user.username)},
-                           current_app.config['SECRET'], current_app.config['ALGORITHM'])
-        return AuthToken.create(token_=token)
+    @classmethod
+    def refresh(cls):
+        user = User.objects().get(id=g.user_id)
+        return AuthToken.create_access_token(user=user)
 
     @classmethod
     def user_update(cls, username):

@@ -79,7 +79,7 @@ class Test_user:
 
         @pytest.fixture(scope="function")
         def subject(self, client, logged_in_user, form):
-            return client.post("/users/login", data=json.dumps(form),content_type="application/json")
+            return client.post("/users/login", data=json.dumps(form), content_type="application/json")
 
         class Test_정상요청:
             def test_200_반환(self, subject):
@@ -127,7 +127,8 @@ class Test_user:
 
         @pytest.fixture(scope="function")
         def subject(self, client, form, headers):
-            return client.patch("/users/update", headers=headers, data=json.dumps(form), content_type="application/json")
+            return client.patch("/users/update", headers=headers, data=json.dumps(form),
+                                content_type="application/json")
 
         class Test_정상요청:
             def test_200_반환(self, subject):
