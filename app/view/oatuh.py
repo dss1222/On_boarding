@@ -29,7 +29,8 @@ class OatuhView(FlaskView):
 
         client_id = "dbTR7izkNsV7agYg8ODl"
         client_secret = "76chnohmXX"
-        redirect_uri = "http://localhost:5000/callback"
+        # redirect_uri = "http://localhost:5000/callback"
+        redirect_uri = "http://20.196.249.193:5000/callback"
 
         token_request = requests.get(
             f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}&code={code}")
