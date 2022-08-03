@@ -16,7 +16,8 @@ class OatuhView(FlaskView):
     @route('/naver')
     def NaverLogin(self):
         client_id = "dbTR7izkNsV7agYg8ODl"
-        redirect_uri = "http://localhost:5000/callback"
+        # redirect_uri = "http://localhost:5000/callback"
+        redirect_uri = "http://20.196.249.193:5000/callback"
         url = f"https://nid.naver.com/oauth2.0/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
         return redirect(url)
 
