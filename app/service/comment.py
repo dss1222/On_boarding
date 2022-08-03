@@ -12,19 +12,6 @@ class CommentService:
         post.update(push__comments=str(comment))
         post.update(inc__comments_cnt=1)
 
-    # @classmethod
-    # def create(cls, post_id, content):
-    #     comment = Comment(content=content)
-    #     post = Post.objects().get(id=post_id)
-    #     comment.user = g.user_id
-    #     comment.post = post
-    #
-    #     comment.save()
-    #
-    #     post.update(push__comments=str(comment))
-    #     post.update(inc__comments_cnt=1)
-    #
-    #
     @classmethod
     def like(cls, comment_id):
         comment = Comment.objects().get(id=comment_id)
