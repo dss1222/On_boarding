@@ -13,7 +13,7 @@ from app.utils.ApiErrorSchema import *
 class OatuhView(FlaskView):
     decorators = (doc(tags=['Naver_Login']),)
 
-    @route('/naver')
+    @route('')
     def NaverLogin(self):
         client_id = "dbTR7izkNsV7agYg8ODl"
         # redirect_uri = "http://localhost:5000/callback"
