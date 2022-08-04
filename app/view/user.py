@@ -4,6 +4,7 @@ from flask_apispec import use_kwargs, marshal_with, doc
 from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
 from app.service.validator import login_required, token_refresh_validator
 from app.utils.ApiErrorSchema import *
+from app.service.auth import *
 from app.service.user import UserService
 
 
@@ -34,6 +35,13 @@ class UserView(FlaskView):
         if result == 401:
             return ApiError(message="아이디 혹은 비밀번호가 잘못 됐습니다"), 401
         return result
+
+    @route('/check', methods=['GET'])
+    @doc(description='유저 상태 확인', summary='유저 상태 확인')
+    @marshal_with(UserSchema, code=200, description='유저 상태 확인 성공')
+    @login_required
+    def check(self):
+        return UserService.check()
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
