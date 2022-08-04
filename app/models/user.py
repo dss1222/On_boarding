@@ -11,7 +11,7 @@ class User(Document):
     username = StringField(required=True, unique=True)
     password = StringField()
     created_at = DateTimeField(default=datetime.datetime.now())
-    type = StringField()
+    provider = StringField()
 
     def check_password(self, password):
         if not bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8')):

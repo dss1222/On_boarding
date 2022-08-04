@@ -9,7 +9,8 @@ class UserCreateSchema(Schema):
 class UserSchema(Schema):
     id = fields.Str()
     username = fields.Str(required=True, unique=True)
-    password = fields.Str(required=True)
+    password = fields.Str()
+    provider = fields.Str()
     created_at = fields.DateTime()
 
 
