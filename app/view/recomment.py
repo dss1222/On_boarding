@@ -4,7 +4,8 @@ from flask_apispec import use_kwargs, doc
 from app.service.validator import *
 from app.serializers.recomments import *
 
-from app.service.recomment import ReCommentService
+from app.models.comment import Comment
+from app.models.recomment import ReComment
 
 
 class ReCommentView(FlaskView):
@@ -16,14 +17,17 @@ class ReCommentView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @use_kwargs(ReCommentCreateFormSchema())
     def create(self, board_id, post_id, comment_id, content):
-        ReCommentService.create(post_id, comment_id, content)
+        comment = Comment.objects().get(id=comment_id)
+        ReComment(content=content, user=g.user_id, comment=comment).save()
+        comment.create_recomment()
         return "", 201
 
     @route('/<string:re_comment_id>/likes', methods=['POST'])
     @doc(summary="대댓글 좋아요", description="대댓글 좋아요")
     @marshal_with(SuccessSchema, code=201, description="성공")
     def like(self, re_comment_id, comment_id, board_id, post_id):
-        ReCommentService.like(re_comment_id)
+        recomment = ReComment.objects().get(id=re_comment_id)
+        recomment.like(g.user_id)
         return "", 201
 
     # 좋아요 취소
@@ -31,5 +35,6 @@ class ReCommentView(FlaskView):
     @doc(summary="대댓글 좋아요 취소", description="대댓글 좋아요 취소")
     @marshal_with(SuccessSchema, code=201, description="성공")
     def unlike(self, re_comment_id, comment_id, board_id, post_id):
-        ReCommentService.unlike(re_comment_id)
+        recomment = ReComment.objects().get(id=re_comment_id)
+        recomment.cancel_like(g.user_id)
         return "", 201

@@ -1,10 +1,8 @@
-﻿import jwt
-import mongoengine.errors
+﻿import mongoengine.errors
 import requests
-from flask import Flask, redirect, request, jsonify, g, current_app
+from flask import redirect, request
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, marshal_with, doc
-from oauth2client.contrib.flask_util import UserOAuth2
+from flask_apispec import marshal_with, doc
 from app.config import Naver, Kakao, Google
 
 from app.models.user import User

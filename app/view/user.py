@@ -1,11 +1,15 @@
+import bcrypt
+
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, marshal_with, doc
+from flask import g
 
 from app.serializers.user import UserCreateFormSchema, UserDetailSchema, UserUpdateFormSchema
 from app.service.validator import login_required, token_refresh_validator
 from app.utils.ApiErrorSchema import *
 from app.service.auth import *
-from app.service.user import UserService
+
+from app.models.user import User
 
 
 class UserView(FlaskView):
@@ -18,11 +22,13 @@ class UserView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
     def signup(self, username, password):
-        result = UserService.signup(username, password) #
-        if result == 201:
-            return "", 201
-        elif result == 409:
+        if User.objects(username=username):
             return NotCreateUsername()
+        else:
+            hash_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+            user = User(username=username, password=hash_password, provider='default')
+            user.save()
+            return "", 201
 
     # 로그인
     @route('/login', methods=['POST'])
@@ -31,17 +37,23 @@ class UserView(FlaskView):
     @marshal_with(AuthAllTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
     def login(self, username, password):
-        result = UserService.login(username, password)
-        if result == 401:
-            return ApiError(message="아이디 혹은 비밀번호가 잘못 됐습니다"), 401
-        return result
+        if not User.objects(username=username):
+            return ApiError(message="아이디가 잘못 됐습니다"), 401
+        else:
+            user = User.objects().get(username=username)
+
+        if user.provider == 'default':
+            if not user.check_password(password):
+                return ApiError(message="비밀번호가 잘못 됐습니다"), 401
+        return AuthToken.create(user=user)
 
     @route('/check', methods=['GET'])
     @doc(description='유저 상태 확인', summary='유저 상태 확인')
     @marshal_with(UserDetailSchema, code=200, description='유저 상태 확인 성공')
     @login_required
     def check(self):
-        return UserService.check()
+        user = User.objects().get(id=g.user_id)
+        return user
 
     # 회원정보수정
     @route('/update', methods=['PATCH'])
@@ -51,10 +63,11 @@ class UserView(FlaskView):
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
     @login_required
     def update(self, username=None):
-        result = UserService.user_update(username)
-        if result == 201:
+        if not User.objects(username=username):
+            user = User.objects().get(id=g.user_id)
+            user.update(username=username)
             return "", 201
-        elif result == 409:
+        else:
             return NotCreateUsername()
 
     @route('/refresh', methods=['GET'])
@@ -62,5 +75,5 @@ class UserView(FlaskView):
     @marshal_with(AuthTokenSchema, code=200, description="토큰 발급")
     @token_refresh_validator
     def refresh(self):
-        result = UserService.refresh()
-        return result
+        user = User.objects().get(id=g.user_id)
+        return AuthToken.create_access_token(user=user)

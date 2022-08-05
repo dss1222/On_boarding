@@ -4,8 +4,6 @@ from flask_apispec import use_kwargs, doc
 from app.serializers.comment import CommentCreateFormSchema, CommentDetailSchema
 from app.service.validator import *
 
-from app.service.comment import CommentService
-
 
 class CommentView(FlaskView):
     decorators = (doc(tags=['Comment']), login_required)
@@ -17,7 +15,12 @@ class CommentView(FlaskView):
     @use_kwargs(CommentCreateFormSchema())
     @post_validator
     def create(self, post_id, board_id, content):
-        CommentService.create(post_id, content)
+        post = Post.objects().get(id=post_id)
+        comment = Comment(content=content, user=g.user_id, post=post)
+        comment.save()
+
+        post.update(push__comments=str(comment))
+        post.update(inc__comments_cnt=1)
         return "", 201
 
     # 좋아요 기능
@@ -26,7 +29,8 @@ class CommentView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @comment_validator
     def like(self, comment_id, board_id, post_id):
-        CommentService.like(comment_id)
+        comment = Comment.objects().get(id=comment_id)
+        comment.like(g.user_id)
         return "", 201
 
     # 좋아요 취소
@@ -35,7 +39,8 @@ class CommentView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     @comment_validator
     def unlike(self, comment_id, board_id, post_id):
-        CommentService.unlike(comment_id)
+        comment = Comment.objects().get(id=comment_id)
+        comment.cancel_like(g.user_id)
         return "", 201
 
     # 댓글 조회
@@ -44,4 +49,6 @@ class CommentView(FlaskView):
     @marshal_with(CommentDetailSchema(many=True), code=200, description="댓글 리스트 조회")
     @post_validator
     def get_comments(self, board_id, post_id):
-        return CommentService.get_comments(post_id)
+        comments = Comment.objects(post=post_id).order_by('-created_at').limit(10)
+
+        return comments, 200

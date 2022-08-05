@@ -1,5 +1,7 @@
 from app.service.validator import *
-from bson import ObjectId
+
+from app.models.post import Post
+from app.models.comment import Comment
 
 
 class CommentService:

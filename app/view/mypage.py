@@ -1,10 +1,11 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, marshal_with, doc
+from flask_apispec import marshal_with, doc
 
 from app.service.validator import login_required
 from app.serializers.post import *
 from app.serializers.comment import *
-from app.service.mypage import MyPageService
+from app.models.post import Post
+from app.models.comment import Comment
 
 
 class MyPageView(FlaskView):
@@ -16,7 +17,8 @@ class MyPageView(FlaskView):
     @marshal_with(PostListSchema(many=True), code=200, description="내가 쓴글 조회")
     @login_required
     def get_myposts(self):
-        return MyPageService.get_myposts()
+        posts = Post.objects(user=g.user_id, is_deleted=False)
+        return posts, 200
 
     # 내가 작성한 코멘트 조회
     @route('/comments', methods=['GET'])
@@ -24,7 +26,8 @@ class MyPageView(FlaskView):
     @marshal_with(CommentDetailSchema(many=True), code=200, description="내가 쓴 댓글 조회")
     @login_required
     def get_mycomments(self):
-        return MyPageService.get_mycomments()
+        comments = Comment.objects(user=g.user_id, is_deleted=False)
+        return comments, 200
 
     # 내가 좋아요한 글 조회
     @route('/posts/likes', methods=['GET'])
@@ -32,4 +35,5 @@ class MyPageView(FlaskView):
     @marshal_with(PostListSchema(many=True), code=200, description="내가 좋아요 한 글 조회")
     @login_required
     def get_myposts_likes(self):
-        return MyPageService.get_mylikes()
+        posts = Post.objects(likes__exact=str(g.user_id), is_deleted=False)
+        return posts, 200
