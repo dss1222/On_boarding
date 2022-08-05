@@ -1,8 +1,9 @@
-import marshmallow
 from bson import ObjectId
 
 from app.service.validator import *
 from app.utils.enumOrder import OrderEnum
+from app.models.models import *
+from app.models.user import User
 
 
 class PostService:

@@ -1,12 +1,12 @@
 from marshmallow import fields, Schema
 
 
-class UserCreateSchema(Schema):
+class UserCreateFormSchema(Schema):
     username = fields.String(required=True, unique=True)
     password = fields.String(required=True, load_only=True)
 
 
-class UserSchema(Schema):
+class UserDetailSchema(Schema):
     id = fields.Str()
     username = fields.Str(required=True, unique=True)
     password = fields.Str()
@@ -14,7 +14,7 @@ class UserSchema(Schema):
     created_at = fields.DateTime()
 
 
-class UserUpdateSchema(Schema):
+class UserUpdateFormSchema(Schema):
     username = fields.Str()
 
 

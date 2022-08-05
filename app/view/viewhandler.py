@@ -1,6 +1,5 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_swagger_ui import get_swaggerui_blueprint
-
 from app.view.user import UserView
 from app.view.post import PostView
 from app.view.comment import CommentView

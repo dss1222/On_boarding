@@ -1,10 +1,4 @@
-import datetime
-import jwt
-
-from bson.json_util import dumps
-from flask import current_app
 from marshmallow import fields, Schema
-from mongoengine import Document, StringField
 
 
 class ApiErrorSchema(Schema):

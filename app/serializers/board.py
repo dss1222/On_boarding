@@ -1,10 +1,10 @@
 from marshmallow import fields, Schema
 
 
-class BoardCreateSchema(Schema):
+class BoardCreateFormSchema(Schema):
     name = fields.Str(required=True)
 
 
-class BoardSchema(Schema):
+class BoardFormSchema(Schema):
     id = fields.Str()
     name = fields.Str()

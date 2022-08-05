@@ -1,12 +1,14 @@
 from app.service.validator import *
-from bson import ObjectId
+
+from app.models.models import *
+from app.models.user import User
 
 
 class ReCommentService:
     @classmethod
     def create(cls, post_id, comment_id, content):
         comment = Comment.objects().get(id=comment_id)
-        ReComment(content=content, user=g.user_id,  comment=comment).save()
+        ReComment(content=content, user=g.user_id, comment=comment).save()
         comment.create_recomment()
 
     @classmethod
