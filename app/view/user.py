@@ -1,7 +1,7 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, marshal_with, doc
 
-from app.serializers.user import UserCreateSchema, UserSchema, UserUpdateSchema
+from app.serializers.user import UserCreateFormSchema, UserDetailSchema, UserUpdateFormSchema
 from app.service.validator import login_required, token_refresh_validator
 from app.utils.ApiErrorSchema import *
 from app.service.auth import *
@@ -14,11 +14,11 @@ class UserView(FlaskView):
     # 회원가입
     @route('/signup', methods=['POST'])
     @doc(description='유저 회원가입', summary='유저 회원가입')
-    @use_kwargs(UserCreateSchema())
+    @use_kwargs(UserCreateFormSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
     def signup(self, username, password):
-        result = UserService.signup(username, password)
+        result = UserService.signup(username, password) #
         if result == 201:
             return "", 201
         elif result == 409:
@@ -27,7 +27,7 @@ class UserView(FlaskView):
     # 로그인
     @route('/login', methods=['POST'])
     @doc(description='유저 로그인', summary='유저 로그인')
-    @use_kwargs(UserSchema())
+    @use_kwargs(UserDetailSchema())
     @marshal_with(AuthAllTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=401, description="로그인 실패")
     def login(self, username, password):
@@ -38,7 +38,7 @@ class UserView(FlaskView):
 
     @route('/check', methods=['GET'])
     @doc(description='유저 상태 확인', summary='유저 상태 확인')
-    @marshal_with(UserSchema, code=200, description='유저 상태 확인 성공')
+    @marshal_with(UserDetailSchema, code=200, description='유저 상태 확인 성공')
     @login_required
     def check(self):
         return UserService.check()
@@ -46,7 +46,7 @@ class UserView(FlaskView):
     # 회원정보수정
     @route('/update', methods=['PATCH'])
     @doc(description='유저 정보 수정', summary='유저 정 수정')
-    @use_kwargs(UserUpdateSchema())
+    @use_kwargs(UserUpdateFormSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
     @login_required

@@ -3,7 +3,7 @@ from marshmallow import fields, Schema
 from app.serializers.user import UserSchemaName
 
 
-class ReCommentCreateSchema(Schema):
+class ReCommentCreateFormSchema(Schema):
     content = fields.Str(required=True)
 
 

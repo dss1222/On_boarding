@@ -13,7 +13,7 @@ class PostView(FlaskView):
     # 게시글 작성
     @route('', methods=['POST'])
     @doc(description='게시글 작성', summary='게시글 작성')
-    @use_kwargs(PostCreateSchema())
+    @use_kwargs(PostCreateFormSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     def create(self, board_id, title, content, tag):
         PostService.create(board_id, title, content, tag)
@@ -30,7 +30,7 @@ class PostView(FlaskView):
     # 게시글 리스트 조회
     @route('/', methods=['GET'])
     @doc(description='게시글 리스트 조회', summary='게시글 리스트 조회')
-    @use_kwargs(PostListFilterSchema, location='query')
+    @use_kwargs(PostListParamSchema, location='query')
     @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
     def get_posts(self, board_id, page, size, orderby):
         return PostService.get_posts(board_id, page, size, orderby)
@@ -38,7 +38,7 @@ class PostView(FlaskView):
     # 게시글 수정 <회원정보 일치해야 함>
     @route('/<string:post_id>', methods=['PATCH'])
     @doc(description='게시글 수정', summary='게시글 수정')
-    @use_kwargs(PostUpdateSchema())
+    @use_kwargs(PostUpdateFormSchema())
     @marshal_with(SuccessSchema, code=201, description="성공")
     @post_user_validator
     def update(self, post_id, board_id, title, content, tag):
@@ -73,8 +73,9 @@ class PostView(FlaskView):
         return "", 201
 
     # 태그 검색 기능
-    @route('/search/<search>', methods=['GET'])
+    @route('/search/', methods=['GET']) #검색어도 쿼리스트링으로 받게 수정,
     @doc(description='게시글 검색 조회', summary='게시글 검색 조회')
+    @use_kwargs(PostSearchParamSchema, location='query')
     @marshal_with(PostListSchema(many=True), code=200, description="게시물 상세 정보")
     def search(self, board_id, search):
         return PostService.search(board_id, search)

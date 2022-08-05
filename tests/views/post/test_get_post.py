@@ -1,5 +1,7 @@
 import pytest
 
+from flask import url_for
+
 from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
@@ -26,11 +28,11 @@ class Test_게시글조회:
 
     @pytest.fixture()
     def url_get(self, board, post):
-        return "/boards/" + str(board.id) + "/posts/" + str(post.id)
+        return f"/boards/{str(board.id)}/posts/{str(post.id)}"
 
     @pytest.fixture()
     def url_get_deleted(self, board, post_delete):
-        return "/boards/" + str(board.id) + "/posts/" + str(post_delete.id)
+        return f"/boards/{str(board.id)}/posts/{str(post_delete.id)}"
 
     # 조회기능
     class Test_게시글_조회:
@@ -58,8 +60,12 @@ class Test_게시글조회:
 
             @pytest.fixture(scope="function")
             def subject(self, headers, client, board, post_list):
-                url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=created"
-                return client.get(url, headers=headers, content_type="application/json")
+                # url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=created"
+                # url = url_for(f"/boards/{str(board.id)}/posts/", page=1, size=3, orderby="created")
+
+                url = f"/boards/{str(board.id)}/posts/?page={1}&size={3}&orderby=created"
+                return client.get(url, headers=headers, content_type="application/json", )
+                # params={'page': 1, 'size': 3, 'orderby': 'created'},)
 
             def test_200_반환(self, subject):
                 assert subject.status_code == 200
@@ -77,12 +83,11 @@ class Test_게시글조회:
             #     def test_400_반환(self, subject):
             #         assert subject.status_code == 422
 
-
     # 검색기능
     class Test_검색기능:
         @pytest.fixture(scope="function")
         def subject(self, headers, client, board, post):
-            url = "/boards/" + str(board.id) + "/posts/search/" + str(post.tag)
+            url = f"/boards/{str(board.id)}/posts/search/?search={str(post.tag)}"
             return client.get(url, headers=headers, content_type="application/json")
 
         def test_태그_검색(self, subject, post):
@@ -92,7 +97,7 @@ class Test_게시글조회:
 
         @pytest.fixture(scope="function")
         def subject2(self, headers, client, board, post):
-            url = "/boards/" + str(board.id) + "/posts/search/없는검색어"
+            url = f"/boards/{str(board.id)}/posts/search/?search=없는검색어"
             return client.get(url, headers=headers, content_type="application/json")
 
         def test_없는태그_검색(self, subject2):

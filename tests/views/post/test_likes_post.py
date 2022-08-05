@@ -26,11 +26,11 @@ class Test_게시글좋아요:
 
     @pytest.fixture()
     def url_get(self, board, post):
-        return "/boards/" + str(board.id) + "/posts/" + str(post.id)
+        return f"/boards/{str(board.id)}/posts/{str(post.id)}"
 
     @pytest.fixture()
     def url_get_deleted(self, board, post_delete):
-        return "/boards/" + str(board.id) + "/posts/" + str(post_delete.id)
+        return f"/boards/{str(board.id)}/posts/{str(post_delete.id)}"
 
     class Test_게시글_좋아요:
         @pytest.fixture(scope="function")

@@ -7,6 +7,7 @@ from tests.factories.post import PostFactory
 
 from app.models.Model import *
 
+
 class Test_게시글작성:
     @pytest.fixture()
     def logged_in_user(self):
@@ -22,7 +23,7 @@ class Test_게시글작성:
 
     @pytest.fixture()
     def url_get(self, board, post):
-        return "/boards/" + str(board.id) + "/posts/" + str(post.id)
+        return f"/boards/{str(board.id)}/posts/{str(post.id)}"
 
     class Test_게시글_작성:
         @pytest.fixture()
@@ -35,7 +36,7 @@ class Test_게시글작성:
 
         @pytest.fixture(scope="function")
         def subject(self, client, headers, form, board):
-            url = "/boards/" + str(board.id) + "/posts"
+            url = f"/boards/{str(board.id)}/posts"
             return client.post(url, headers=headers, data=json.dumps(form), content_type="application/json")
 
         class Test_정상요청:
@@ -57,8 +58,9 @@ class Test_게시글작성:
         class Test_토큰이이상할경우:
             @pytest.fixture(scope="function")
             def subject(self, client, form, board):
-                url = "/boards/" + str(board.id) + "/posts"
-                return client.post(url, headers={"Authorization": "asd"}, data=json.dumps(form), content_type="application/json")
+                url = f"/boards/{str(board.id)}/posts"
+                return client.post(url, headers={"Authorization": "asd"}, data=json.dumps(form),
+                                   content_type="application/json")
 
             def test_400_반환(self, subject):
                 assert subject.status_code == 403
@@ -67,9 +69,9 @@ class Test_게시글작성:
             @pytest.fixture()
             def form(self):
                 return {
-                    "title" : "title",
-                    "con" : "contnet",
-                    "tag" : "tag"
+                    "title": "title",
+                    "con": "contnet",
+                    "tag": "tag"
                 }
 
             def test_400_반환(self, subject):

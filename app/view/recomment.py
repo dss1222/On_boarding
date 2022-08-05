@@ -14,7 +14,7 @@ class ReCommentView(FlaskView):
     @route('', methods=['POST'])
     @doc(description='대댓글 작성', summary='대댓글 작성')
     @marshal_with(SuccessSchema, code=201, description="성공")
-    @use_kwargs(ReCommentCreateSchema())
+    @use_kwargs(ReCommentCreateFormSchema())
     def create(self, board_id, post_id, comment_id, content):
         ReCommentService.create(post_id, comment_id, content)
         return "", 201

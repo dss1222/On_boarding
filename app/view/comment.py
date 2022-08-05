@@ -1,7 +1,7 @@
 from flask_classful import FlaskView, route
 from flask_apispec import use_kwargs, doc
 
-from app.serializers.comment import CommentCreateSchema, CommentDetailSchema
+from app.serializers.comment import CommentCreateFormSchema, CommentDetailSchema
 from app.service.validator import *
 
 from app.service.comment import CommentService
@@ -14,7 +14,7 @@ class CommentView(FlaskView):
     @route('/', methods=['POST'])
     @doc(description='댓글 작성', summary='댓글 작성')
     @marshal_with(SuccessSchema, code=201, description="성공")
-    @use_kwargs(CommentCreateSchema())
+    @use_kwargs(CommentCreateFormSchema())
     @post_validator
     def create(self, post_id, board_id, content):
         CommentService.create(post_id, content)
