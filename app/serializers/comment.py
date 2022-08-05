@@ -1,11 +1,11 @@
 from app.serializers.recomments import *
 
 
-class CommentCreateSchema(Schema):
+class CommentCreateFormSchema(Schema):
     content = fields.Str(required=True)
 
 
-class CommentSchema(Schema):
+class CommentFormSchema(Schema):
     id = fields.Str()
     content = fields.Str()
     user = fields.Nested(UserSchemaName)

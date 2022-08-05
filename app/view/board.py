@@ -2,7 +2,7 @@ from flask_classful import FlaskView, route
 from flask_apispec import doc, use_kwargs
 
 from app.service.validator import *
-from app.serializers.board import BoardCreateSchema
+from app.serializers.board import BoardCreateFormSchema
 from app.utils.ApiErrorSchema import *
 
 
@@ -12,7 +12,7 @@ class BoardView(FlaskView):
     @route('/', methods=['POST'])
     @doc(description="게시판 등록", summary="게시판 등록")
     @login_required
-    @use_kwargs(BoardCreateSchema())
+    @use_kwargs(BoardCreateFormSchema())
     @marshal_with(SuccessSchema(), code=201, description="성공")
     def create(self, name):
         board = Board(name=name)

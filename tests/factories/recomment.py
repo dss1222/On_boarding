@@ -4,7 +4,8 @@ import factory
 from factory import fuzzy
 from factory.mongoengine import MongoEngineFactory
 
-from app.models.Model import Comment
+from app.models.models import ReComment
+
 from tests.factories.post import PostFactory
 from tests.factories.user import UserFactory
 from tests.factories.comment import CommentFactory
@@ -12,7 +13,7 @@ from tests.factories.comment import CommentFactory
 
 class ReCommentFactory(MongoEngineFactory):
     class Meta:
-        model = Comment
+        model = ReComment
 
     post = factory.SubFactory(PostFactory)
     user = factory.SubFactory(UserFactory)

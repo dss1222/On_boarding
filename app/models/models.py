@@ -1,6 +1,5 @@
 from mongoengine import *
 import datetime
-import bcrypt
 
 from flask_mongoengine import Document
 from mongoengine import StringField, DateTimeField
@@ -107,4 +106,3 @@ class ReComment(Document):
 
     def soft_delete(self):
         self.update(is_deleted=True)
-

@@ -1,7 +1,7 @@
-from flask import g, current_app
+from flask import g
 
-from app.serializers.post import *
-from app.models.Model import Post, Comment
+from app.models.models import *
+from app.models.user import User
 
 
 class MyPageService:

@@ -1,7 +1,5 @@
-﻿from mongoengine import *
-import datetime
+﻿import datetime
 import bcrypt
-from enum import Enum
 
 from flask_mongoengine import Document
 from mongoengine import StringField, DateTimeField

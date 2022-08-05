@@ -1,9 +1,5 @@
-import datetime
-
-import jwt
 import bcrypt
-from flask import g, current_app, request
-from bson.json_util import dumps
+from flask import g
 
 from app.models.user import User
 from app.service.auth import *
