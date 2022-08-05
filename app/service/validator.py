@@ -1,16 +1,14 @@
 import mongoengine.errors
-from flask_apispec import marshal_with
+import jwt
 
+from flask_apispec import marshal_with
+from flask import current_app
 from functools import wraps
 from flask import request, g
 from bson.json_util import loads
 
 from app.utils.ApiErrorSchema import *
-from app.models.board import Board
-from app.models.user import User
-from app.models.post import Post
-from app.models.comment import Comment
-from app.models.recomment import ReComment
+from app.models.models import *
 
 
 # 로그인 인증 데코레이터

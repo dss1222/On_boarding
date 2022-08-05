@@ -5,7 +5,8 @@ from app.serializers.post import *
 from app.service.validator import *
 from app.utils.enumOrder import OrderEnum
 
-from app.models.post import Post
+from app.models.models import *
+from app.models.user import User
 
 
 class PostView(FlaskView):

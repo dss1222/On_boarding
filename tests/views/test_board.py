@@ -9,7 +9,7 @@ from tests.factories.user import UserFactory
 from tests.factories.board import BoardFactory
 
 
-class Describe_BoardView:
+class Test_BoardView:
     @pytest.fixture()
     def logged_in_user(self):
         return UserFactory.create()

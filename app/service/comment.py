@@ -1,7 +1,7 @@
 from app.service.validator import *
 
-from app.models.post import Post
-from app.models.comment import Comment
+from app.models.models import *
+from app.models.user import User
 
 
 class CommentService:

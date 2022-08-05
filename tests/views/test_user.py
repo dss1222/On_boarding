@@ -2,7 +2,7 @@ import pytest
 import json
 
 from tests.factories.user import UserFactory
-from app.models.board import *
+from app.models.models import *
 
 
 class Test_user:
