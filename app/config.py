@@ -36,3 +36,7 @@ class Google:
     client_secret = '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'
     # redirect_uri = 'http://localhost:5000/google/callback'
     redirect_uri = 'http://20.196.249.193:5000/google/callback'  # 배포
+
+
+class Kakao_2:
+    client_id = '5bc95fa6278ab00bd9d2f29dee0608d6'
