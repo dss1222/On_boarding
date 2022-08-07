@@ -2,9 +2,10 @@
 import requests
 from flask import redirect, request
 from flask_classful import FlaskView, route
-from flask_apispec import marshal_with, doc
+from flask_apispec import marshal_with, doc, use_kwargs
 from app.config import Naver, Kakao_2, Google
 
+from app.serializers.oauth import OauthFormSchema
 from app.models.user import User
 from app.service.user import UserService
 from app.service.auth import *
@@ -13,6 +14,10 @@ from app.utils.ApiErrorSchema import *
 
 class OatuhView(FlaskView):
     decorators = (doc(tags=['oauth_login']),)
+
+    @route('/ping', methods=['GET'])
+    def pong(self):
+        return "pong"
 
     @route('/naver')
     @doc(summary="네이버 로그인 URL", description="네이버 로그인요청")
@@ -24,6 +29,7 @@ class OatuhView(FlaskView):
     @doc(summary="네이버 로그인 콜백", description="네이버 로그인 콜백")
     @marshal_with(AuthAllTokenSchema, code=200, description="토큰 발급")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
+    @use_kwargs(OauthFormSchema)
     def naver_callback(self):
         code = request.args["code"]
 
@@ -48,7 +54,7 @@ class OatuhView(FlaskView):
     #     url = f"https://kauth.kakao.com/oauth/authorize?client_id={Kakao.client_id}&redirect_uri={Kakao.redirect_uri}&response_type=code"
     #     return redirect(url)
 
-    @route('/kakao/callback')
+    @route('/kakao/callback', methods=['GET'])
     @doc(summary="카카오 로그인 콜백", description="카카오 로그인 콜백")
     @marshal_with(ApiErrorSchema, code=409, description="이미 존재하는 사용자")
     @marshal_with(AuthAllTokenSchema, code=200, description="토큰 발급")
