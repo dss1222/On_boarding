@@ -1,19 +1,22 @@
-from app.serializers.recomments import *
+from marshmallow import Schema, fields
+
+from app.serializers.recomments import ReCommentDetailSchema
+from app.serializers.user import UserSchemaName
 
 
 class CommentCreateFormSchema(Schema):
-    content = fields.Str(required=True)
+    content = fields.String(required=True)
 
 
 class CommentFormSchema(Schema):
-    id = fields.Str()
-    content = fields.Str()
+    id = fields.String()
+    content = fields.String()
     user = fields.Nested(UserSchemaName)
 
 
 class CommentDetailSchema(Schema):
-    id = fields.Str()
+    id = fields.String()
     user = fields.Nested(UserSchemaName)
-    content = fields.Str()
-    likes_cnt = fields.Int()
+    content = fields.String()
+    likes_cnt = fields.Integer()
     recomment = fields.Nested(ReCommentDetailSchema(many=True))

@@ -6,7 +6,7 @@ from app.view.comment import CommentView
 from app.view.board import BoardView
 from app.view.recomment import ReCommentView
 from app.view.mypage import MyPageView
-from app.view.oatuh import *
+from app.view.oatuh import OatuhView
 
 api = Blueprint("api", __name__)
 

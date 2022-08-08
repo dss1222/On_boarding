@@ -1,8 +1,13 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, doc
+from flask_apispec import use_kwargs, doc, marshal_with
+from flask import g
 
 from app.serializers.comment import CommentCreateFormSchema, CommentDetailSchema
-from app.service.validator import *
+from app.service.validator import login_required, post_validator, comment_validator
+from app.utils.ApiErrorSchema import SuccessSchema
+
+from app.models.post import Post
+from app.models.comment import Comment
 
 
 class CommentView(FlaskView):
@@ -30,7 +35,7 @@ class CommentView(FlaskView):
     @comment_validator
     def like(self, comment_id, board_id, post_id):
         comment = Comment.objects().get(id=comment_id)
-        comment.like(g.user_id)
+        comment.like_comment(g.user_id)
         return "", 201
 
     # 좋아요 취소
@@ -40,7 +45,7 @@ class CommentView(FlaskView):
     @comment_validator
     def unlike(self, comment_id, board_id, post_id):
         comment = Comment.objects().get(id=comment_id)
-        comment.cancel_like(g.user_id)
+        comment.cancel_like_comment(g.user_id)
         return "", 201
 
     # 댓글 조회

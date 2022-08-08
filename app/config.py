@@ -27,8 +27,8 @@ class Naver:
 class Kakao:
     client_id = 'ed7d28e7036c6bf58342cabf80953f3c'
     client_secret = 'TIfBV2wic46YaZnTJ0PbJNwD5yap3IYT'
-    # redirect_uri = 'http://localhost:5000/kakao/callback'
-    redirect_uri = 'http://20.196.249.193:5000//kakao/callback'  # 배포
+    redirect_uri = 'http://localhost:5000/kakao/callback'
+    # redirect_uri = 'http://20.196.249.193:5000//kakao/callback'  # 배포
 
 
 class Google:

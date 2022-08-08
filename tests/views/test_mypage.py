@@ -2,7 +2,7 @@ import pytest
 
 from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
-from tests.factories.post import PostFactory
+from tests.factories.posts import PostFactory
 
 
 class Test_마이페이지:

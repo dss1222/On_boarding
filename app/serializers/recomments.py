@@ -4,11 +4,11 @@ from app.serializers.user import UserSchemaName
 
 
 class ReCommentCreateFormSchema(Schema):
-    content = fields.Str(required=True)
+    content = fields.String(required=True)
 
 
 class ReCommentDetailSchema(Schema):
-    id = fields.Str()
+    id = fields.String()
     user = fields.Nested(UserSchemaName)
-    likes_cnt = fields.Int()
-    content = fields.Str()
+    likes_cnt = fields.Integer()
+    content = fields.String()

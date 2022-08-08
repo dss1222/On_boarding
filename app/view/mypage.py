@@ -5,7 +5,7 @@ from flask import g
 from app.service.validator import login_required
 from app.serializers.post import *
 from app.serializers.comment import *
-from app.models.models import *
+from app.models.post import *
 from app.models.user import User
 
 
