@@ -1,7 +1,5 @@
 from marshmallow import fields, Schema
-from marshmallow_enum import EnumField
 
-from app.utils.enumOrder import OrderEnum
 from app.serializers.user import UserSchemaName
 from app.serializers.comment import CommentDetailSchema
 from app.serializers.board import BoardFormSchema
@@ -42,7 +40,7 @@ class PostSearchParamSchema(Schema):
 class PostListParamSchema(Schema):
     page = fields.Integer()
     size = fields.Integer()
-    # orderby = fields.EnumField(OrderEnum, required=True)  # enum 으로 수됨
+    # orderby = EnumField(OrderEnum, required=True)  # enum 으로
     orderby = fields.String()
 
 

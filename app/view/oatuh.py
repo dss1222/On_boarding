@@ -7,8 +7,8 @@ from app.config import Naver, Kakao, Google
 
 from app.models.user import User
 from app.service.user import UserService
-from app.service.auth import *
-from app.utils.ApiErrorSchema import *
+from app.service.auth import AuthAllTokenSchema
+from app.utils.ApiErrorSchema import ApiErrorSchema, NotCreateUsername
 
 
 class OatuhView(FlaskView):
