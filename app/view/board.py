@@ -5,7 +5,7 @@ from app.service.validator import login_required
 from app.serializers.board import BoardCreateFormSchema
 from app.utils.ApiErrorSchema import SuccessSchema
 
-from app.models.Model import Board
+from app.models.post import Board
 
 
 class BoardView(FlaskView):

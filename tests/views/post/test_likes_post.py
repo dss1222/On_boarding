@@ -2,9 +2,9 @@ import pytest
 
 from tests.factories.board import BoardFactory
 from tests.factories.user import UserFactory
-from tests.factories.post import PostFactory
+from tests.factories.posts import PostFactory
 
-from app.models.Model import *
+from app.models.post import *
 
 
 class Test_게시글좋아요:

@@ -8,9 +8,10 @@ from flask import request, g
 from bson.json_util import loads
 
 from app.utils.ApiErrorSchema import ApiError, ApiErrorSchema, WrongId, NotCreatedUser
-from app.models.Model import Post, Comment
+from app.models.post import Post
 from app.models.board import Board
 from app.models.user import User
+from app.models.comment import Comment
 
 
 # 로그인 인증 데코레이터
