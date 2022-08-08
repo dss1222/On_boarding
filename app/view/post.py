@@ -43,9 +43,7 @@ class PostView(FlaskView):
     @use_kwargs(PostListParamSchema, location='query')
     @marshal_with(PostListSchema(many=True), code=200, description="게시글 리스트 조회")
     def get_posts(self, board_id, page, size, orderby):
-        order_by = OrderEnum[str(orderby)].value
-
-        posts = Post.objects(board=board_id, is_deleted=False).order_by(order_by)[
+        posts = Post.objects(board=board_id, is_deleted=False).order_by(orderby.value)[
                 (page - 1) * size: page * size]
 
         return posts, 200
