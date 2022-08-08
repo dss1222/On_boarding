@@ -1,13 +1,15 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, doc
+from flask_apispec import use_kwargs, doc, marshal_with
+from flask import g
 from bson import ObjectId
-from app.serializers.post import *
-from app.service.validator import *
+from app.serializers.post import PostListSchema, PostDetailSchema, PostListParamSchema, PostCreateFormSchema, PostUpdateFormSchema, PostSearchParamSchema
+from app.service.validator import login_required, board_validator, post_validator, post_user_validator
 from app.utils.enumOrder import OrderEnum
+from app.utils.ApiErrorSchema import ApiError, ApiErrorSchema, SuccessSchema
 
-from app.models.models import *
-from app.models.user import User
-
+from app.models.post import Post
+from app.models.comment import Comment
+from app.models.recomment import ReComment
 
 class PostView(FlaskView):
     decorators = (doc(tags=['POST']), login_required, board_validator)
@@ -69,8 +71,8 @@ class PostView(FlaskView):
         for comment in comment_list:
             recomment_list = ReComment.objects(comment=comment)
             for recomment in recomment_list:
-                recomment.soft_delete()
-            comment.soft_delete()
+                recomment.soft_delete_recomment()
+            comment.soft_delete_comment()
 
         post.soft_delete()
         return "", 204

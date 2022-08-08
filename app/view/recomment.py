@@ -1,11 +1,13 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, doc
+from flask_apispec import use_kwargs, doc, marshal_with
+from flask import g
 
-from app.service.validator import *
-from app.serializers.recomments import *
+from app.service.validator import login_required, comment_validator
+from app.serializers.recomments import ReCommentCreateFormSchema
+from app.utils.ApiErrorSchema import SuccessSchema
 
-from app.models.models import *
-from app.models.user import User
+from app.models.recomment import ReComment
+from app.models.comment import Comment
 
 
 class ReCommentView(FlaskView):
@@ -27,7 +29,7 @@ class ReCommentView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     def like(self, re_comment_id, comment_id, board_id, post_id):
         recomment = ReComment.objects().get(id=re_comment_id)
-        recomment.like(g.user_id)
+        recomment.like_recomment(g.user_id)
         return "", 201
 
     # 좋아요 취소
@@ -36,5 +38,5 @@ class ReCommentView(FlaskView):
     @marshal_with(SuccessSchema, code=201, description="성공")
     def unlike(self, re_comment_id, comment_id, board_id, post_id):
         recomment = ReComment.objects().get(id=re_comment_id)
-        recomment.cancel_like(g.user_id)
+        recomment.cancel_like_recomment(g.user_id)
         return "", 201

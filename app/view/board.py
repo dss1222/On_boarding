@@ -1,9 +1,11 @@
 from flask_classful import FlaskView, route
-from flask_apispec import doc, use_kwargs
+from flask_apispec import doc, use_kwargs, marshal_with
 
-from app.service.validator import *
+from app.service.validator import login_required
 from app.serializers.board import BoardCreateFormSchema
-from app.utils.ApiErrorSchema import *
+from app.utils.ApiErrorSchema import SuccessSchema
+
+from app.models.post import Board
 
 
 class BoardView(FlaskView):
