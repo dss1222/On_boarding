@@ -5,7 +5,7 @@ from tests.factories.user import UserFactory
 from tests.factories.post import PostFactory
 from tests.factories.comment import CommentFactory
 
-from app.models.models import *
+from app.models.Model import *
 
 
 class Test_댓글_좋아요:

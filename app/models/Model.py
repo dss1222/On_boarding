@@ -1,13 +1,10 @@
-from mongoengine import *
+from mongoengine import ReferenceField, ListField, IntField, BooleanField, StringField, DateTimeField, \
+    ComplexDateTimeField
 import datetime
 
 from flask_mongoengine import Document
-from mongoengine import StringField, DateTimeField
 from app.models.user import User
-
-
-class Board(Document):
-    name = StringField(required=True)
+from app.models.board import Board
 
 
 class Post(Document):

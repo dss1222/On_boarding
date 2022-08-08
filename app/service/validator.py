@@ -7,8 +7,10 @@ from functools import wraps
 from flask import request, g
 from bson.json_util import loads
 
-from app.utils.ApiErrorSchema import *
-from app.models.models import *
+from app.utils.ApiErrorSchema import ApiError, ApiErrorSchema, WrongId, NotCreatedUser
+from app.models.Model import Post, Comment
+from app.models.board import Board
+from app.models.user import User
 
 
 # 로그인 인증 데코레이터

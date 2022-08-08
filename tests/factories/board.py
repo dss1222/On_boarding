@@ -1,7 +1,7 @@
 from factory import fuzzy
 from factory.mongoengine import MongoEngineFactory
 
-from app.models.models import Board
+from app.models.Model import Board
 
 
 class BoardFactory(MongoEngineFactory):

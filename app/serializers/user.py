@@ -7,17 +7,17 @@ class UserCreateFormSchema(Schema):
 
 
 class UserDetailSchema(Schema):
-    id = fields.Str()
-    username = fields.Str(required=True, unique=True)
-    password = fields.Str()
-    provider = fields.Str()
+    id = fields.String()
+    username = fields.String(required=True, unique=True)
+    password = fields.String()
+    provider = fields.String()
     created_at = fields.DateTime()
 
 
 class UserUpdateFormSchema(Schema):
-    username = fields.Str()
+    username = fields.String()
 
 
 class UserSchemaName(Schema):
-    id = fields.Str()
-    username = fields.Str()
+    id = fields.String()
+    username = fields.String()

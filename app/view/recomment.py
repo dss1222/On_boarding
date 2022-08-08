@@ -1,11 +1,12 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, doc
+from flask_apispec import use_kwargs, doc, marshal_with
+from flask import g
 
-from app.service.validator import *
-from app.serializers.recomments import *
+from app.service.validator import login_required, comment_validator
+from app.serializers.recomments import ReCommentCreateFormSchema
+from app.utils.ApiErrorSchema import SuccessSchema
 
-from app.models.models import *
-from app.models.user import User
+from app.models.Model import Comment, ReComment
 
 
 class ReCommentView(FlaskView):

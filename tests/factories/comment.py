@@ -4,7 +4,7 @@ import factory
 from factory import fuzzy
 from factory.mongoengine import MongoEngineFactory
 
-from app.models.models import Comment
+from app.models.Model import Comment
 from tests.factories.post import PostFactory
 from tests.factories.user import UserFactory
 

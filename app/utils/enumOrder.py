@@ -1,7 +1,7 @@
-from enum import Enum
+import enum
 
 
-class OrderEnum(Enum):
+class OrderEnum(enum.Enum):
     created = '-created_at'
     likes = '-likes_cnt'
     comments = '-comments_cnt'

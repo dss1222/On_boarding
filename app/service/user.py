@@ -2,20 +2,10 @@ import bcrypt
 from flask import g
 
 from app.models.user import User
-from app.service.auth import *
+from app.service.auth import AuthToken
 
 
 class UserService:
-    @classmethod
-    def signup(cls, username, password):
-        if User.objects(username=username):
-            return 409
-        else:
-            hash_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-            user = User(username=username, password=hash_password, provider='default')
-            user.save()
-            return 201
-
     @classmethod
     def login(cls, username, password):
         if not User.objects(username=username):

@@ -1,8 +1,12 @@
 from flask_classful import FlaskView, route
-from flask_apispec import use_kwargs, doc
+from flask_apispec import use_kwargs, doc, marshal_with
+from flask import g
 
 from app.serializers.comment import CommentCreateFormSchema, CommentDetailSchema
-from app.service.validator import *
+from app.service.validator import login_required, post_validator, comment_validator
+from app.utils.ApiErrorSchema import SuccessSchema
+
+from app.models.Model import Post, Comment
 
 
 class CommentView(FlaskView):
