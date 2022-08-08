@@ -1,11 +1,12 @@
-from mongoengine import ReferenceField, ListField, IntField, BooleanField, StringField, DateTimeField, \
-    ComplexDateTimeField
+from mongoengine import ReferenceField, ListField, IntField, BooleanField, StringField, DateTimeField
 import datetime
 
 from flask_mongoengine import Document
 from app.models.user import User
 from app.models.board import Board
 
+
+# 질문 EnumFiled 값 넘기는법을 모름,
 
 class Post(Document):
     user = ReferenceField(User, required=True)
