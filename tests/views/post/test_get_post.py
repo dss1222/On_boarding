@@ -63,7 +63,7 @@ class Test_게시글조회:
                 # url = "/boards/" + str(board.id) + "/posts/?page=1&size=3&orderby=created"
                 # url = url_for(f"/boards/{str(board.id)}/posts/", page=1, size=3, orderby="created")
 
-                url = f"/boards/{str(board.id)}/posts/?page={1}&size={3}&orderby=created"
+                url = f"/boards/{str(board.id)}/posts/?page=1&size=3&orderby=created"
                 return client.get(url, headers=headers, content_type="application/json", )
                 # params={'page': 1, 'size': 3, 'orderby': 'created'},)
 
